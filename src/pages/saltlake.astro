@@ -1,0 +1,110 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const today = new Date();
+const dateStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+const weekday = weekdays[today.getDay()];
+
+const seasons = ['冬', '冬', '春', '春', '春', '夏', '夏', '夏', '秋', '秋', '秋', '冬'];
+const season = seasons[today.getMonth()];
+
+const seasonData = {
+  '春': { name: '春季', color: 'text-pool', bg: 'bg-pool/10', desc: '春季气温回升，盐池中的杜氏盐藻开始活跃，湖水呈现出清新的翡翠绿与薄荷色调。这是观鸟的最佳季节，大批候鸟途经盐湖。', temp: '15-25°C', tip: '早晚温差较大，建议携带薄外套。' },
+  '夏': { name: '夏季', color: 'text-salt-pink', bg: 'bg-salt-pink/10', desc: '夏季高温加速水分蒸发，盐浓度急剧升高，湖水呈现梦幻的珊瑚红与玫瑰粉色。这是盐湖色彩最浓烈的时节，被称为"天空之镜"。', temp: '28-38°C', tip: '高温暴晒，务必做好防晒措施，携带充足饮水。' },
+  '秋': { name: '秋季', color: 'text-amber-dark', bg: 'bg-amber/10', desc: '秋季气温适中，盐池逐渐过渡为琥珀色与金黄色。天高云淡，能见度极佳，日落时分的盐湖尤其壮观。', temp: '10-22°C', tip: '最佳摄影季节，建议携带偏振镜和三脚架。' },
+  '冬': { name: '冬季', color: 'text-stone', bg: 'bg-stone/10', desc: '冬季低温使盐池表面析出白色盐晶，形成天然的"冰雪世界"。此时盐湖呈现纯净的白色与淡蓝色调，别有一番静谧之美。', temp: '-5-8°C', tip: '注意保暖，湖面结冰请勿靠近未开放区域。' },
+};
+
+const data = seasonData[season];
+---
+
+<Layout title="实时盐湖 - 盐色运城" description="运城七彩盐湖实时观赏指南，根据季节推荐最佳观赏时间与拍摄点位。">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <div class="text-center mb-12">
+      <span class="inline-block px-4 py-1 bg-brick/10 text-brick rounded-full text-sm font-medium mb-4">
+        {dateStr} {weekday}
+      </span>
+      <h1 class="font-display text-4xl sm:text-5xl font-bold text-ink mb-4">今日盐湖</h1>
+      <p class="text-stone max-w-2xl mx-auto text-lg">
+        七彩盐湖的色彩随季节与天气变幻，每一天都是独一无二的风景
+      </p>
+    </div>
+
+    <!-- 季节状态卡 -->
+    <div class={`p-8 rounded-2xl ${data.bg} border border-salt-dark/10 mb-12`}>
+      <div class="flex items-center gap-3 mb-4">
+        <span class={`text-2xl font-display font-bold ${data.color}`}>{data.name}</span>
+        <span class="text-stone text-sm">· 当前季节色彩特征</span>
+      </div>
+      <p class="text-ink leading-relaxed mb-6">{data.desc}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="flex items-center gap-3">
+          <svg class="w-5 h-5 text-amber" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <span class="text-stone text-sm">气温范围：<span class="text-ink font-medium">{data.temp}</span></span>
+        </div>
+        <div class="flex items-center gap-3">
+          <svg class="w-5 h-5 text-brick" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="text-stone text-sm">{data.tip}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 盐湖介绍 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+      <div>
+        <h2 class="font-display text-2xl font-bold text-ink mb-4">关于七彩盐湖</h2>
+        <p class="text-stone leading-relaxed mb-4">
+          运城盐湖位于山西省运城市区南，是世界三大硫酸钠型内陆盐湖之一，总面积达132平方公里。因湖中矿物质浓度不同，以及温度、光照的变化，湖面呈现出红、粉、橙、黄、绿、蓝、紫等七彩斑斓的色彩。
+        </p>
+        <p class="text-stone leading-relaxed mb-4">
+          盐湖的彩色源于湖中的杜氏盐藻和嗜盐菌。在高温高盐环境下，这些微生物产生大量类胡萝卜素，使湖水呈现粉红至红色；而在盐度较低的区域，湖水则保持蓝绿色调。
+        </p>
+        <p class="text-stone leading-relaxed">
+          运城盐湖开采历史可追溯至5000年前，是中华民族最早开发利用的内陆盐湖，被誉为"国之大宝"。
+        </p>
+      </div>
+      <div class="space-y-6">
+        <div class="p-6 rounded-xl bg-white border border-salt-dark/10">
+          <h3 class="font-bold text-ink mb-2">最佳观赏时间</h3>
+          <p class="text-stone text-sm">日出前后 1 小时，以及日落前 2 小时。此时光线柔和，盐湖色彩最为饱和。</p>
+        </div>
+        <div class="p-6 rounded-xl bg-white border border-salt-dark/10">
+          <h3 class="font-bold text-ink mb-2">推荐拍摄点位</h3>
+          <p class="text-stone text-sm">七彩盐湖景区观景台、盐湖绿道、盐湖大道沿线。无人机航拍可以捕捉湖面的全貌与纹理。</p>
+        </div>
+        <div class="p-6 rounded-xl bg-white border border-salt-dark/10">
+          <h3 class="font-bold text-ink mb-2">景区门票</h3>
+          <p class="text-stone text-sm">七彩盐湖景区目前免费开放。盐湖绿道骑行需租借自行车，约20-40元/小时。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 四季色彩 -->
+    <div>
+      <h2 class="font-display text-2xl font-bold text-ink mb-6">四季盐湖色彩</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-6 rounded-xl bg-pool/10 border border-pool/20 text-center">
+          <p class="font-display text-2xl font-bold text-pool mb-1">春</p>
+          <p class="text-sm text-stone">翡翠绿 · 薄荷青</p>
+        </div>
+        <div class="p-6 rounded-xl bg-salt-pink/15 border border-salt-pink/20 text-center">
+          <p class="font-display text-2xl font-bold text-salt-pink mb-1">夏</p>
+          <p class="text-sm text-stone">珊瑚红 · 玫瑰粉</p>
+        </div>
+        <div class="p-6 rounded-xl bg-amber/10 border border-amber/20 text-center">
+          <p class="font-display text-2xl font-bold text-amber-dark mb-1">秋</p>
+          <p class="text-sm text-stone">琥珀金 · 日落橙</p>
+        </div>
+        <div class="p-6 rounded-xl bg-stone/10 border border-stone/20 text-center">
+          <p class="font-display text-2xl font-bold text-stone mb-1">冬</p>
+          <p class="text-sm text-stone">盐晶白 · 冰蓝</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

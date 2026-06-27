@@ -1,0 +1,88 @@
+---
+const today = new Date();
+const dateStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+const weekday = weekdays[today.getDay()];
+
+const seasons = ['冬', '冬', '春', '春', '春', '夏', '夏', '夏', '秋', '秋', '秋', '冬'];
+const season = seasons[today.getMonth()];
+
+const seasonInfo = {
+  '春': { color: 'text-pool', label: '春季', desc: '新绿初绽，盐池呈现翡翠般的青绿色调，是观鸟的最佳时节。' },
+  '夏': { color: 'text-salt-pink', label: '夏季', desc: '高温蒸发，盐池盐分浓缩，呈现出梦幻的粉红色与珊瑚红色。' },
+  '秋': { color: 'text-amber-dark', label: '秋季', desc: '天高气爽，盐池渐变为琥珀色与金黄色，日落时分尤为壮观。' },
+  '冬': { color: 'text-stone', label: '冬季', desc: '低温结晶，盐池表面析出白色盐晶，宛若冬日雪原。' },
+};
+
+const info = seasonInfo[season];
+---
+
+<section class="py-16 sm:py-24 bg-gradient-to-b from-white to-salt">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <span class="inline-block px-3 py-1 bg-brick text-white text-xs font-medium rounded-full">
+            实时更新
+          </span>
+          <span class="text-stone text-sm">{dateStr} {weekday}</span>
+        </div>
+        <h2 class="font-display text-3xl sm:text-4xl font-bold text-ink mb-4">
+          今日盐湖
+        </h2>
+        <div class={`inline-flex items-center gap-2 text-lg font-medium ${info.color} mb-6`}>
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+          </svg>
+          {info.label} · 盐湖色彩指南
+        </div>
+        <p class="text-stone leading-relaxed mb-8 text-lg">
+          {info.desc}
+        </p>
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="w-2 h-2 mt-2 rounded-full bg-amber shrink-0"></div>
+            <div>
+              <p class="font-medium text-ink">最佳观赏时间</p>
+              <p class="text-sm text-stone">日出前后 1 小时 或 日落前 2 小时</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-2 h-2 mt-2 rounded-full bg-brick shrink-0"></div>
+            <div>
+              <p class="font-medium text-ink">推荐拍摄点</p>
+              <p class="text-sm text-stone">七彩盐湖景区观景台、盐湖绿道骑行段</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-2 h-2 mt-2 rounded-full bg-pool shrink-0"></div>
+            <div>
+              <p class="font-medium text-ink">温馨提示</p>
+              <p class="text-sm text-stone">夏季注意防晒，建议携带遮阳帽与饮用水</p>
+            </div>
+          </div>
+        </div>
+        <a
+          href="/saltlake"
+          class="inline-flex items-center gap-2 mt-8 text-brick font-medium hover:text-brick-dark transition-colors"
+        >
+          查看详细攻略
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+      <div class="relative">
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-amber/30 via-salt-pink/20 to-pool/20 flex items-center justify-center border border-salt-dark/10">
+          <div class="text-center p-8">
+            <svg class="w-20 h-20 mx-auto text-salt-dark/40 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <p class="text-stone text-sm">盐湖实景占位图</p>
+            <p class="text-stone/60 text-xs mt-1">根据季节自动推荐最佳观赏色彩</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

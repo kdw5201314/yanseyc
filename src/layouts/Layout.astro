@@ -1,0 +1,117 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = '盐色运城', description = '本地设计师带你逛运城——运城文旅入口' } = Astro.props;
+
+const navItems = [
+  { label: '首页', href: '/' },
+  { label: '必去景点', href: '/attractions' },
+  { label: '国保地图', href: '/treasures' },
+  { label: '美食地图', href: '/food' },
+  { label: '交通指南', href: '/transport' },
+  { label: '实时盐湖', href: '/saltlake' },
+  { label: '实用信息', href: '/essentials' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="generator" content={Astro.generator} />
+  <meta name="description" content={description} />
+  <title>{title}</title>
+</head>
+<body class="min-h-screen flex flex-col">
+  <header class="sticky top-0 z-50 bg-salt/95 backdrop-blur border-b border-salt-dark/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="/" class="flex items-center gap-2">
+          <span class="font-display text-xl font-bold text-brick">盐色运城</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-1">
+          {navItems.map((item) => (
+            <a
+              href={item.href}
+              class={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                currentPath === item.href
+                  ? 'text-brick bg-brick/10'
+                  : 'text-stone hover:text-ink hover:bg-salt-dark/10'
+              }`}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-stone hover:text-ink hover:bg-salt-dark/10" aria-label="菜单">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden border-t border-salt-dark/20 bg-salt px-4 py-2 space-y-1">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+            currentPath === item.href
+              ? 'text-brick bg-brick/10'
+              : 'text-stone hover:text-ink hover:bg-salt-dark/10'
+          }`}
+        >
+          {item.label}
+        </a>
+      ))}
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <slot />
+  </main>
+
+  <footer class="bg-ink text-white/60 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="font-display text-lg font-bold text-white mb-3">盐色运城</h3>
+          <p class="text-sm leading-relaxed">本地设计师带你逛运城，发现运城之美。</p>
+        </div>
+        <div>
+          <h3 class="font-display text-lg font-bold text-white mb-3">快速导航</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/attractions" class="hover:text-amber transition-colors">必去景点</a></li>
+            <li><a href="/treasures" class="hover:text-amber transition-colors">国保地图</a></li>
+            <li><a href="/food" class="hover:text-amber transition-colors">美食地图</a></li>
+            <li><a href="/transport" class="hover:text-amber transition-colors">交通指南</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display text-lg font-bold text-white mb-3">关于</h3>
+          <p class="text-sm leading-relaxed">由热爱运城的本地人精心打造，用设计师的视角带你重新发现这座城市。</p>
+          <p class="text-sm mt-2">yansheyuncheng@gmail.com</p>
+        </div>
+      </div>
+      <div class="mt-8 pt-6 border-t border-white/10 text-center text-xs">
+        <p>盐色运城 yanseyc.com 2026 版权所有</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    if (btn && menu) {
+      btn.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+      });
+    }
+  </script>
+</body>
+</html>

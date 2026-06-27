@@ -1,0 +1,113 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="交通指南 - 盐色运城" description="运城交通攻略——高铁、飞机、自驾、市内交通全方位指南。">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <div class="text-center mb-12">
+      <h1 class="font-display text-4xl sm:text-5xl font-bold text-ink mb-4">交通指南</h1>
+      <p class="text-stone max-w-2xl mx-auto text-lg">如何抵达运城，以及在运城如何出行</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- 高铁 -->
+      <div class="p-8 rounded-2xl bg-white border border-salt-dark/10">
+        <div class="w-12 h-12 rounded-xl bg-brick/10 flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-brick" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <h2 class="font-display text-xl font-bold text-ink mb-3">高铁</h2>
+        <p class="text-stone text-sm leading-relaxed mb-4">运城北站是大西高铁上的重要站点。从太原约1.5小时，从西安约1小时，从北京约5小时可达。</p>
+        <ul class="space-y-2 text-sm text-stone">
+          <li class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber"></span>
+            运城北站 — 市区约15公里
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber"></span>
+            公交7路、14路直达市区
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber"></span>
+            出租车约30元
+          </li>
+        </ul>
+      </div>
+
+      <!-- 飞机 -->
+      <div class="p-8 rounded-2xl bg-white border border-salt-dark/10">
+        <div class="w-12 h-12 rounded-xl bg-amber/10 flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-amber-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+          </svg>
+        </div>
+        <h2 class="font-display text-xl font-bold text-ink mb-3">飞机</h2>
+        <p class="text-stone text-sm leading-relaxed mb-4">运城关公机场（运城张孝机场）已开通北京、上海、广州、深圳、成都等国内主要城市航线。</p>
+        <ul class="space-y-2 text-sm text-stone">
+          <li class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber"></span>
+            机场 — 市区约10公里
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber"></span>
+            机场巴士 / 出租车约20元
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber"></span>
+            飞行时间：北京约1.5小时
+          </li>
+        </ul>
+      </div>
+
+      <!-- 自驾 -->
+      <div class="p-8 rounded-2xl bg-white border border-salt-dark/10">
+        <div class="w-12 h-12 rounded-xl bg-pool/10 flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-pool" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+          </svg>
+        </div>
+        <h2 class="font-display text-xl font-bold text-ink mb-3">自驾</h2>
+        <p class="text-stone text-sm leading-relaxed mb-4">运城高速公路网发达，G5京昆高速、G59呼北高速、S75侯平高速贯穿全境，自驾游览各景点最为方便。</p>
+        <ul class="space-y-2 text-sm text-stone">
+          <li class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber"></span>
+            太原 — 运城约3.5小时
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber"></span>
+            西安 — 运城约2.5小时
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber"></span>
+            洛阳 — 运城约2小时
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 市内交通 -->
+    <div class="mt-12">
+      <h2 class="font-display text-2xl font-bold text-ink mb-6">市内交通</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="p-6 rounded-xl bg-white border border-salt-dark/10">
+          <h3 class="font-bold text-ink mb-2">公交车</h3>
+          <p class="text-stone text-sm leading-relaxed">运城公交线路覆盖市区主要景点，票价1-2元。可使用支付宝乘车码或办理运城公交卡。</p>
+        </div>
+        <div class="p-6 rounded-xl bg-white border border-salt-dark/10">
+          <h3 class="font-bold text-ink mb-2">出租车 / 网约车</h3>
+          <p class="text-stone text-sm leading-relaxed">出租车起步价6元/2公里，网约车滴滴、高德打车均可使用。前往周边县城建议包车或租车。</p>
+        </div>
+        <div class="p-6 rounded-xl bg-white border border-salt-dark/10">
+          <h3 class="font-bold text-ink mb-2">共享单车</h3>
+          <p class="text-stone text-sm leading-relaxed">市区内有哈啰、美团等共享单车，适合短途出行。盐湖周边有专门的自行车绿道，骑行体验极佳。</p>
+        </div>
+        <div class="p-6 rounded-xl bg-white border border-salt-dark/10">
+          <h3 class="font-bold text-ink mb-2">景区直通车</h3>
+          <p class="text-stone text-sm leading-relaxed">旅游旺季时，运城汽车站有发往主要景区的直通车，可直达关帝庙、永乐宫、鹳雀楼等热门目的地。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
