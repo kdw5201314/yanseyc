@@ -1,0 +1,283 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="数据后台 - 盐色运城" description="盐色运城数据管理后台">
+  <div id="admin-app" class="min-h-screen">
+    <!-- 登录界面 -->
+    <div id="login-screen" class="flex items-center justify-center min-h-[80vh] px-4">
+      <div class="w-full max-w-md bg-white rounded-2xl shadow-sm border border-salt-dark/10 p-8">
+        <div class="text-center mb-8">
+          <div class="text-4xl mb-4">🔐</div>
+          <h1 class="font-display text-2xl font-bold text-ink mb-2">盐色运城 · 数据后台</h1>
+          <p class="text-stone text-sm">登录以查看网站数据统计</p>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-ink mb-1.5">账户</label>
+            <input type="text" id="login-user" placeholder="请输入账户" class="w-full px-4 py-3 rounded-xl border border-salt-dark/20 bg-salt/30 text-ink focus:outline-none focus:border-brick focus:ring-2 focus:ring-brick/20 transition-all" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-ink mb-1.5">密码</label>
+            <input type="password" id="login-pass" placeholder="请输入密码" class="w-full px-4 py-3 rounded-xl border border-salt-dark/20 bg-salt/30 text-ink focus:outline-none focus:border-brick focus:ring-2 focus:ring-brick/20 transition-all" />
+          </div>
+          <p id="login-error" class="text-sm text-brick hidden"></p>
+          <button id="login-btn" class="w-full py-3 bg-ink text-white rounded-xl font-medium hover:bg-ink/90 transition-colors">登 录</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 后台界面 -->
+    <div id="dashboard-screen" class="hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- 顶栏 -->
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h1 class="font-display text-2xl font-bold text-ink">数据后台</h1>
+            <p class="text-stone text-sm mt-1" id="last-update">数据加载中...</p>
+          </div>
+          <button id="logout-btn" class="px-4 py-2 text-sm border border-salt-dark/20 rounded-lg text-stone hover:text-brick hover:border-brick/30 transition-colors">
+            退出登录
+          </button>
+        </div>
+
+        <!-- 核心指标卡片 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div class="bg-white rounded-xl border border-salt-dark/10 p-5">
+            <p class="text-xs text-stone/60 uppercase tracking-wide mb-2">总浏览量</p>
+            <p class="font-display text-3xl font-bold text-ink" id="stat-pv">--</p>
+          </div>
+          <div class="bg-white rounded-xl border border-salt-dark/10 p-5">
+            <p class="text-xs text-stone/60 uppercase tracking-wide mb-2">总点击量</p>
+            <p class="font-display text-3xl font-bold text-brick" id="stat-clicks">--</p>
+          </div>
+          <div class="bg-white rounded-xl border border-salt-dark/10 p-5">
+            <p class="text-xs text-stone/60 uppercase tracking-wide mb-2">独立访客</p>
+            <p class="font-display text-3xl font-bold text-amber" id="stat-visitors">--</p>
+          </div>
+          <div class="bg-white rounded-xl border border-salt-dark/10 p-5">
+            <p class="text-xs text-stone/60 uppercase tracking-wide mb-2">反馈数量</p>
+            <p class="font-display text-3xl font-bold text-pool" id="stat-feedbacks">--</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <!-- 页面排行 -->
+          <div class="bg-white rounded-xl border border-salt-dark/10 p-6">
+            <h2 class="font-display text-lg font-bold text-ink mb-4">📊 页面浏览排行</h2>
+            <div id="page-ranking" class="space-y-3">
+              <p class="text-stone/50 text-sm">加载中...</p>
+            </div>
+          </div>
+
+          <!-- 热门点击 -->
+          <div class="bg-white rounded-xl border border-salt-dark/10 p-6">
+            <h2 class="font-display text-lg font-bold text-ink mb-4">🔥 热门点击元素</h2>
+            <div id="top-clicks" class="space-y-3">
+              <p class="text-stone/50 text-sm">加载中...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 24小时趋势 -->
+        <div class="bg-white rounded-xl border border-salt-dark/10 p-6 mb-8">
+          <h2 class="font-display text-lg font-bold text-ink mb-4">📈 24小时流量趋势</h2>
+          <div id="hourly-chart" class="flex items-end gap-1 h-40">
+            <p class="text-stone/50 text-sm w-full text-center self-center">加载中...</p>
+          </div>
+        </div>
+
+        <!-- 反馈列表 -->
+        <div class="bg-white rounded-xl border border-salt-dark/10 p-6">
+          <h2 class="font-display text-lg font-bold text-ink mb-4">💬 用户反馈列表</h2>
+          <div id="feedback-list" class="space-y-4">
+            <p class="text-stone/50 text-sm">加载中...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const AUTH_KEY = 'yc_admin_token';
+    let analyticsData = { events: [], feedbacks: [] };
+
+    // --- 登录 ---
+    document.getElementById('login-btn')?.addEventListener('click', async () => {
+      const user = (document.getElementById('login-user') as HTMLInputElement).value.trim();
+      const pass = (document.getElementById('login-pass') as HTMLInputElement).value.trim();
+      const errEl = document.getElementById('login-error')!;
+
+      if (!user || !pass) { errEl.textContent = '请输入账户和密码'; errEl.classList.remove('hidden'); return; }
+
+      try {
+        const res = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: user, password: pass })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          localStorage.setItem(AUTH_KEY, data.token);
+          showDashboard();
+        } else {
+          errEl.textContent = data.error || '登录失败';
+          errEl.classList.remove('hidden');
+        }
+      } catch {
+        errEl.textContent = '网络错误';
+        errEl.classList.remove('hidden');
+      }
+    });
+
+    // 回车登录
+    document.getElementById('login-pass')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('login-btn')?.click();
+    });
+
+    // 退出
+    document.getElementById('logout-btn')?.addEventListener('click', () => {
+      localStorage.removeItem(AUTH_KEY);
+      location.reload();
+    });
+
+    // --- Dashboard ---
+    async function fetchData() {
+      const token = localStorage.getItem(AUTH_KEY);
+      if (!token) return null;
+      try {
+        const res = await fetch('/api/analytics', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.status === 401) { localStorage.removeItem(AUTH_KEY); location.reload(); return null; }
+        return await res.json();
+      } catch { return null; }
+    }
+
+    function renderDashboard(data: any) {
+      const events = data?.events || [];
+      const feedbacks = data?.feedbacks || [];
+      analyticsData = data;
+
+      const now = Date.now();
+      const last24h = events.filter((e: any) => (now - e.receivedAt) < 24 * 3600 * 1000);
+      const pageviews = events.filter((e: any) => e.type === 'pageview');
+      const clicks = events.filter((e: any) => e.type === 'click');
+      const sessions = new Set(last24h.map((e: any) => e.sessionId)).size;
+      const recentPV = pageviews.filter((e: any) => (now - e.receivedAt) < 24 * 3600 * 1000);
+
+      // 核心指标
+      document.getElementById('stat-pv')!.textContent = String(pageviews.length);
+      document.getElementById('stat-clicks')!.textContent = String(clicks.length);
+      document.getElementById('stat-visitors')!.textContent = String(sessions);
+      document.getElementById('stat-feedbacks')!.textContent = String(feedbacks.length);
+      document.getElementById('last-update')!.textContent = `最近更新: ${new Date().toLocaleTimeString('zh-CN')}（数据总计 ${events.length} 条事件）`;
+
+      // 页面排行
+      const pageMap: Record<string, number> = {};
+      recentPV.forEach((e: any) => { const p = e.page || '/'; pageMap[p] = (pageMap[p] || 0) + 1; });
+      const pageRank = Object.entries(pageMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      const maxPV = pageRank[0]?.[1] || 1;
+      const pageRankEl = document.getElementById('page-ranking')!;
+      pageRankEl.innerHTML = pageRank.map(([p, c], i) => `
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold text-stone/40 w-5">${i + 1}</span>
+          <span class="text-sm font-medium text-ink flex-1 truncate">${pageNames[p] || p}</span>
+          <span class="text-xs font-mono text-stone/60">${c}次</span>
+          <div class="w-24 h-2 bg-salt-dark/10 rounded-full overflow-hidden">
+            <div class="h-full bg-brick rounded-full transition-all" style="width:${(c / maxPV * 100).toFixed(0)}%"></div>
+          </div>
+        </div>
+      `).join('') || '<p class="text-stone/50 text-sm">暂无数据</p>';
+
+      // 热门点击
+      const clickMap: Record<string, number> = {};
+      clicks.forEach((e: any) => {
+        const key = e.data?.text || e.data?.href || '其他';
+        if (key && key.length > 2) clickMap[key] = (clickMap[key] || 0) + 1;
+      });
+      const topClicks = Object.entries(clickMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      const maxClick = topClicks[0]?.[1] || 1;
+      document.getElementById('top-clicks')!.innerHTML = topClicks.map(([k, c], i) => `
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold text-stone/40 w-5">${i + 1}</span>
+          <span class="text-sm text-ink flex-1 truncate">${k}</span>
+          <span class="text-xs font-mono text-stone/60">${c}</span>
+          <div class="w-24 h-2 bg-salt-dark/10 rounded-full overflow-hidden">
+            <div class="h-full bg-amber rounded-full transition-all" style="width:${(c / maxClick * 100).toFixed(0)}%"></div>
+          </div>
+        </div>
+      `).join('') || '<p class="text-stone/50 text-sm">暂无数据</p>';
+
+      // 24小时趋势
+      const hours: number[] = new Array(24).fill(0);
+      last24h.forEach((e: any) => {
+        const h = new Date(e.receivedAt).getHours();
+        hours[h]++;
+      });
+      const maxH = Math.max(...hours, 1);
+      document.getElementById('hourly-chart')!.innerHTML = hours.map((c, h) => `
+        <div class="flex-1 flex flex-col items-center gap-1">
+          <span class="text-[10px] text-stone/40 font-mono">${c || ''}</span>
+          <div class="w-full bg-brick/20 rounded-t transition-all" style="height:${Math.max((c / maxH * 100), 2).toFixed(0)}%"></div>
+          <span class="text-[10px] text-stone/40">${h}时</span>
+        </div>
+      `).join('');
+
+      // 反馈列表
+      document.getElementById('feedback-list')!.innerHTML = (feedbacks as any[]).slice().reverse().map((f: any) => `
+        <div class="p-4 rounded-xl bg-salt-dark/3 border border-salt-dark/5">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium text-ink">${escapeHtml(f.nickname || '匿名')}</span>
+              <span class="px-2 py-0.5 rounded-full text-xs ${typeColors[f.type] || 'bg-salt-dark/10 text-stone'}">${typeLabels[f.type] || f.type}</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="text-xs text-stone/50">${new Date(f.createdAt).toLocaleString('zh-CN')}</span>
+              ${f.rating ? `<span class="text-xs text-amber">${'⭐'.repeat(f.rating)}</span>` : ''}
+            </div>
+          </div>
+          <p class="text-sm text-stone leading-relaxed">${escapeHtml(f.content || '')}</p>
+        </div>
+      `).join('') || '<p class="text-stone/50 text-sm">暂无反馈</p>';
+    }
+
+    const pageNames: Record<string, string> = {
+      '/': '首页',
+      '/attractions': '必去景点',
+      '/treasures': '国保地图',
+      '/saltlake': '实时盐湖',
+      '/saltlake/navigate': '盐湖导航',
+      '/fankui': '反馈建议',
+      '/admin': '数据后台',
+      '/food': '美食地图',
+      '/transport': '交通指南',
+      '/essentials': '实用信息',
+    };
+
+    const typeLabels: Record<string, string> = { feature: '功能建议', bug: 'Bug反馈', content: '内容建议', other: '其他' };
+    const typeColors: Record<string, string> = { feature: 'bg-pool/10 text-pool', bug: 'bg-brick/10 text-brick', content: 'bg-amber/10 text-amber', other: 'bg-salt-dark/10 text-stone' };
+
+    function escapeHtml(s: string) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    async function showDashboard() {
+      document.getElementById('login-screen')!.classList.add('hidden');
+      document.getElementById('dashboard-screen')!.classList.remove('hidden');
+      const data = await fetchData();
+      if (data) renderDashboard(data);
+
+      // 每30秒自动刷新
+      setInterval(async () => {
+        const d = await fetchData();
+        if (d) renderDashboard(d);
+      }, 30000);
+    }
+
+    // 自动登录检测
+    if (localStorage.getItem(AUTH_KEY)) {
+      showDashboard();
+    }
+  </script>
+</Layout>

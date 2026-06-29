@@ -1,0 +1,221 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const today = new Date();
+const dateStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+const weekday = weekdays[today.getDay()];
+
+const seasonMonths = ['冬', '冬', '春', '春', '春', '夏', '夏', '夏', '秋', '秋', '秋', '冬'];
+const currentSeason = seasonMonths[today.getMonth()];
+
+const seasons = {
+  '春': { name: '春季', emoji: '🌸', color: 'text-pool', bg: 'bg-pool/10', border: 'border-pool/20', grad: 'from-pool/20 to-pool/5', desc: '气温回升，杜氏盐藻开始活跃，湖水呈现清新的翡翠绿与薄荷色调。大批候鸟途经盐湖，是观鸟的最佳季节。', colors: '翡翠绿 · 薄荷青', temp: '15–25°C', tip: '早晚温差较大，建议携带薄外套。最佳拍摄时间：清晨日出前后。' },
+  '夏': { name: '夏季', emoji: '🌡️', color: 'text-salt-pink', bg: 'bg-salt-pink/10', border: 'border-salt-pink/20', grad: 'from-salt-pink/20 to-salt-pink/5', desc: '高温加速水分蒸发，盐浓度急剧升高，湖水呈现梦幻的珊瑚红与玫瑰粉色。这是盐湖色彩最浓烈的时节，被称为"中国版天空之镜"。', colors: '珊瑚红 · 玫瑰粉', temp: '28–38°C', tip: '高温暴晒，务必防晒、携带充足饮水。拍摄建议无人机航拍。' },
+  '秋': { name: '秋季', emoji: '🍂', color: 'text-amber-dark', bg: 'bg-amber/10', border: 'border-amber/20', grad: 'from-amber/20 to-amber/5', desc: '气温适中，色彩逐渐过渡为琥珀色与金黄色。天高云淡能见度极佳，日落时分的盐湖尤为壮观，盐晶在夕阳下闪闪发光。', colors: '琥珀金 · 日落橙', temp: '10–22°C', tip: '最佳摄影季节，建议携带偏振镜。日落前2小时为黄金拍摄时段。' },
+  '冬': { name: '冬季', emoji: '❄️', color: 'text-stone', bg: 'bg-stone/5', border: 'border-stone/20', grad: 'from-stone/10 to-stone/5', desc: '低温使盐池表面析出白色盐晶，形成天然的"冰雪世界"。湖面呈现纯净的白色与淡蓝色调，有几分贝加尔湖的静谧之美。', colors: '盐晶白 · 冰蓝', temp: '-5–8°C', tip: '注意保暖，湖面结冰请勿靠近非开放区域。雪后拍摄效果极佳。' },
+};
+
+const experiences = [
+  { title: '盐水漂浮', desc: '高浓度盐水使人自然漂浮，像躺在死海一样轻松，适合不会游泳的人体验漂浮乐趣。', icon: 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z' },
+  { title: '黑泥养生', desc: '湖底黑泥富含矿物质和微量元素，涂抹全身可深度清洁皮肤，被誉为天然美容品。', icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01' },
+  { title: '盐湖骑行', desc: '沿盐湖绿道骑行，全长约20公里，途经最佳观赏点，是感受盐湖全貌的最佳方式。', icon: 'M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z' },
+  { title: '七彩盐湖景区', desc: '核心体验区，包含观景台、漂浮体验池、盐疗馆，是了解盐湖的最佳入口。', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+  { title: '盐池神庙', desc: '全国唯一的盐池神庙，了解运城五千年盐业史，唐代以来历代帝王均在此祭祀盐神。', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
+  { title: '航拍天空之镜', desc: '无人机视角下的盐湖色彩层次分明，不同盐池呈现截然不同的颜色，出片率极高。', icon: 'M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z' },
+];
+---
+
+<Layout title="实时盐湖 - 盐色运城" description={`运城七彩盐湖实时观赏指南 · ${dateStr} ${weekday} · ${currentSeason}季色彩特征。含四季变色科普、6大体验项目、实用攻略。`}>
+  <!-- Hero -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-salt via-white to-salt">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <div class="text-center">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <span class="inline-block px-4 py-1 bg-brick/10 text-brick rounded-full text-sm font-medium">
+            {dateStr} · {weekday}
+          </span>
+          <span class={`inline-block px-3 py-1 rounded-full text-sm font-medium ${seasons[currentSeason].bg} ${seasons[currentSeason].color} border ${seasons[currentSeason].border}`}>
+            {seasons[currentSeason].emoji} {seasons[currentSeason].name}
+          </span>
+        </div>
+        <h1 class="font-display text-4xl sm:text-6xl font-bold text-ink mb-4">今日盐湖</h1>
+        <p class="text-stone max-w-xl mx-auto text-lg mb-8 leading-relaxed">
+          七彩盐湖的色彩随季节与天气变幻，每一天都是独一无二的风景。当前{seasons[currentSeason].name}，湖面呈现{seasons[currentSeason].colors}。
+        </p>
+        <a href="/saltlake/navigate" class="inline-flex items-center gap-2 px-6 py-3 bg-brick text-white rounded-lg font-medium hover:bg-brick-dark transition-colors shadow-lg shadow-brick/20">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          如何去这里
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 四季色彩 Tab -->
+  <section class="py-12 sm:py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-ink text-center mb-2">四季盐湖色彩</h2>
+      <p class="text-stone text-center mb-10 max-w-xl mx-auto">点击切换季节，查看不同时节的盐湖色彩特征</p>
+
+      <div class="flex justify-center gap-2 mb-8 flex-wrap">
+        {Object.entries(seasons).map(([key, s]) => (
+          <button
+            class={`season-tab px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+              key === currentSeason
+                ? `bg-brick text-white shadow-lg shadow-brick/20`
+                : `text-stone hover:text-ink bg-salt-dark/5 hover:bg-salt-dark/10`
+            }`}
+            data-season={key}
+          >
+            {s.emoji} {s.name}
+          </button>
+        ))}
+      </div>
+
+      {Object.entries(seasons).map(([key, s]) => (
+        <div class={`season-panel ${key === currentSeason ? '' : 'hidden'}`} data-season={key}>
+          <div class={`p-8 sm:p-10 rounded-2xl bg-gradient-to-br ${s.grad} border ${s.border}`}>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+              <div>
+                <div class="flex items-center gap-3 mb-3">
+                  <span class="text-3xl">{s.emoji}</span>
+                  <h3 class={`font-display text-2xl font-bold ${s.color}`}>{s.name}色彩</h3>
+                </div>
+                <p class="text-ink leading-relaxed text-lg mb-4">{s.desc}</p>
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/80 rounded-full border border-salt-dark/10">
+                  <span class={`w-3 h-3 rounded-full ${s.color.replace('text-', 'bg-')}`}></span>
+                  <span class="text-sm font-medium text-ink">{s.colors}</span>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <div class="flex items-center gap-3 p-4 rounded-xl bg-white/80">
+                  <svg class="w-5 h-5 text-amber shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                  <div><p class="text-xs text-stone/60">气温范围</p><p class="text-sm font-medium text-ink">{s.temp}</p></div>
+                </div>
+                <div class="flex items-center gap-3 p-4 rounded-xl bg-white/80">
+                  <svg class="w-5 h-5 text-brick shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <div><p class="text-xs text-stone/60">温馨提示</p><p class="text-sm font-medium text-ink">{s.tip}</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 变色原理科普 -->
+  <section class="py-12 sm:py-20 bg-salt">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold text-ink mb-4">盐湖为什么是彩色的？</h2>
+          <div class="space-y-4 text-stone leading-relaxed">
+            <p>运城盐湖总面积<strong class="text-ink">132平方公里</strong>，是世界三大硫酸钠型内陆盐湖之一。其七彩斑斓的秘密藏在湖水中——两位"调色师"：<strong class="text-salt-pink">杜氏盐藻</strong>和<strong class="text-amber-dark">嗜盐菌</strong>。</p>
+            <p>在<strong class="text-brick">高温高盐</strong>环境下，杜氏盐藻大量繁殖并产生类胡萝卜素，使湖水呈现<strong class="text-salt-pink">粉红至红色</strong>；而在盐度较低的区域，湖水则保持蓝绿色调。温度、盐度、光照三者的微妙平衡，造就了每一天都不同的湖面色彩。</p>
+            <p>运城盐湖开采历史可追溯至<strong class="text-ink">5000年前</strong>，是中华民族最早开发利用的内陆盐湖，被誉为"国之大宝"。盐池孕育了运城千年的盐商文化，也成就了运城在华夏文明中的独特地位。</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-4 rounded-xl bg-white border border-salt-dark/10">
+            <p class="text-xs text-stone/60 mb-1">面积</p>
+            <p class="font-display text-3xl font-bold text-brick">132</p>
+            <p class="text-xs text-stone mt-1">平方公里</p>
+          </div>
+          <div class="p-4 rounded-xl bg-white border border-salt-dark/10">
+            <p class="text-xs text-stone/60 mb-1">开采史</p>
+            <p class="font-display text-3xl font-bold text-amber">5000+</p>
+            <p class="text-xs text-stone mt-1">年</p>
+          </div>
+          <div class="p-4 rounded-xl bg-white border border-salt-dark/10">
+            <p class="text-xs text-stone/60 mb-1">矿物质</p>
+            <p class="font-display text-3xl font-bold text-pool">80+</p>
+            <p class="text-xs text-stone mt-1">种微量元素</p>
+          </div>
+          <div class="p-4 rounded-xl bg-white border border-salt-dark/10">
+            <p class="text-xs text-stone/60 mb-1">漂浮体验</p>
+            <p class="font-display text-3xl font-bold text-salt-pink">≈死海</p>
+            <p class="text-xs text-stone mt-1">浮力相当</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 体验项目 -->
+  <section class="py-12 sm:py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-ink text-center mb-2">特色体验项目</h2>
+      <p class="text-stone text-center mb-10 max-w-xl mx-auto">不止看风景，盐湖的打开方式比你想的多</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {experiences.map((exp) => (
+          <div class="group p-6 rounded-2xl bg-salt border border-salt-dark/10 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <div class="inline-flex p-3 rounded-xl bg-brick/10 text-brick mb-4 group-hover:bg-brick group-hover:text-white transition-colors duration-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={exp.icon}/></svg>
+            </div>
+            <h3 class="font-bold text-ink mb-2">{exp.title}</h3>
+            <p class="text-sm text-stone leading-relaxed">{exp.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 实用信息 -->
+  <section class="py-12 sm:py-20 bg-salt">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-ink text-center mb-2">实用信息</h2>
+      <p class="text-stone text-center mb-10">出行前你需要知道的一切</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="p-6 rounded-2xl bg-white border border-salt-dark/10 text-center">
+          <svg class="w-8 h-8 mx-auto text-amber mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <h3 class="font-bold text-ink mb-1">景区门票</h3>
+          <p class="text-sm text-stone">户外湖区免费开放</p>
+          <p class="text-xs text-stone/60 mt-1">体验项目另计</p>
+        </div>
+        <div class="p-6 rounded-2xl bg-white border border-salt-dark/10 text-center">
+          <svg class="w-8 h-8 mx-auto text-pool mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <h3 class="font-bold text-ink mb-1">最佳时间</h3>
+          <p class="text-sm text-stone">日出前后1小时</p>
+          <p class="text-xs text-stone/60 mt-1">日落前2小时</p>
+        </div>
+        <div class="p-6 rounded-2xl bg-white border border-salt-dark/10 text-center">
+          <svg class="w-8 h-8 mx-auto text-brick mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <h3 class="font-bold text-ink mb-1">地址</h3>
+          <p class="text-sm text-stone">运城市盐湖区</p>
+          <p class="text-xs text-stone/60 mt-1">市区南侧沿湖路</p>
+        </div>
+        <div class="p-6 rounded-2xl bg-white border border-salt-dark/10 text-center">
+          <svg class="w-8 h-8 mx-auto text-salt-pink mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <h3 class="font-bold text-ink mb-1">游览时长</h3>
+          <p class="text-sm text-stone">建议3-4小时</p>
+          <p class="text-xs text-stone/60 mt-1">含骑行约半天</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <a href="/saltlake/navigate" class="block text-center py-8 bg-brick text-white hover:bg-brick-dark transition-colors">
+    <span class="inline-flex items-center gap-2 text-lg font-medium">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      查看导航路线 → 如何去盐湖
+    </span>
+  </a>
+</Layout>
+
+<script>
+  // Season tab switching
+  document.querySelectorAll('.season-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const season = btn.dataset.season;
+      document.querySelectorAll('.season-tab').forEach(b => {
+        b.classList.remove('bg-brick', 'text-white', 'shadow-lg', 'shadow-brick/20');
+        b.classList.add('text-stone', 'bg-salt-dark/5');
+      });
+      btn.classList.remove('text-stone', 'bg-salt-dark/5');
+      btn.classList.add('bg-brick', 'text-white', 'shadow-lg', 'shadow-brick/20');
+      document.querySelectorAll('.season-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelector(`.season-panel[data-season="${season}"]`).classList.remove('hidden');
+    });
+  });
+</script>

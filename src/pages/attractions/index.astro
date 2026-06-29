@@ -1,0 +1,312 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import attractionsData from '../../data/attractions.json';
+
+const { attractions } = attractionsData;
+
+// 按类别分组统计
+const categories = [
+  { key: 'all', label: '全部', icon: '◆', count: attractions.length },
+  { key: '古建庙宇', label: '古建庙宇', icon: '🏛', count: attractions.filter(a => a.category === '古建庙宇').length },
+  { key: '自然奇观', label: '自然奇观', icon: '🏔', count: attractions.filter(a => a.category === '自然奇观').length },
+  { key: '名楼高塔', label: '名楼高塔', icon: '🏯', count: attractions.filter(a => a.category === '名楼高塔').length },
+  { key: '历史遗迹', label: '历史遗迹', icon: '🏺', count: attractions.filter(a => a.category === '历史遗迹').length },
+  { key: '陵墓名人', label: '陵墓名人', icon: '🪦', count: attractions.filter(a => a.category === '陵墓名人').length },
+];
+
+// 便捷性分组（二级筛选）
+const conveniences = [...new Set(attractions.map(a => a.convenience))];
+---
+
+<Layout title="必去景点 - 盐色运城">
+  <div class="min-h-screen bg-salt">
+    <!-- Hero -->
+    <section class="relative bg-ink text-white overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-b from-brick/20 to-transparent"></div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 relative">
+        <div class="max-w-3xl">
+          <p class="text-amber font-medium mb-3 tracking-widest text-sm">MUST-VISIT ATTRACTIONS</p>
+          <h1 class="font-display text-4xl sm:text-5xl font-bold mb-4">
+            必去<span class="text-amber">景点</span>
+          </h1>
+          <p class="text-white/70 text-lg">20个精选景点，覆盖13个县市，从盐湖到古建，从自然到人文</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Bar -->
+    <div class="sticky top-[72px] z-40 bg-white/95 backdrop-blur border-b border-salt-dark/10 py-4">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Category Filter -->
+        <div class="flex items-center gap-3 flex-wrap mb-3">
+          {categories.map((cat, i) => (
+            <button 
+              class={`filter-btn group flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+                i === 0 
+                  ? 'bg-brick text-white shadow-lg shadow-brick/20' 
+                  : 'bg-salt text-ink hover:bg-salt-dark'
+              }`}
+              data-filter={cat.key}
+            >
+              <span class="text-lg leading-none">{cat.icon}</span>
+              <span>{cat.label}</span>
+              <span class="text-xs opacity-60 ml-0.5">{cat.count}</span>
+            </button>
+          ))}
+        </div>
+        
+        <!-- Secondary: Convenience -->
+        <div class="flex items-center gap-2 overflow-x-auto scrollbar-hide pt-1 border-t border-salt-dark/5">
+          <span class="text-xs text-stone/50 shrink-0">交通：</span>
+          {conveniences.map(conv => (
+            <button 
+              class="conv-btn px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all bg-salt text-stone hover:bg-salt-dark hover:text-ink"
+              data-conv={conv}
+            >{conv}</button>
+          ))}
+          <button 
+            class="conv-btn active px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all bg-amber/10 text-amber-dark"
+            data-conv="all"
+          >不限</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attractions Grid -->
+    <section class="py-8 sm:py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Title (dynamically updated) -->
+        <div class="flex items-baseline justify-between mb-6">
+          <h2 class="text-sm text-stone" id="section-label">全部景点 · <span id="result-count">20</span>个</h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="attractions-grid">
+          {attractions.map((attr, idx) => (
+            <article 
+              class="attraction-card group bg-white rounded-2xl overflow-hidden border border-salt-dark/10 hover:shadow-xl hover:shadow-brick/5 transition-all duration-300 cursor-pointer hover:-translate-y-1"
+              data-category={attr.category}
+              data-conv={attr.convenience}
+              data-index={idx}
+            >
+              <!-- Image -->
+              <div class="relative h-48 overflow-hidden">
+                <img 
+                  src={`/images/attractions/${idx}.png`} 
+                  alt={attr.name}
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                <div class="absolute top-3 left-3 flex gap-2">
+                  <span class="px-2.5 py-1 bg-white/90 backdrop-blur rounded-full text-xs font-medium text-ink">{attr.county}</span>
+                  <span class="px-2.5 py-1 bg-white/90 backdrop-blur rounded-full text-xs font-medium text-brick">{attr.era}</span>
+                </div>
+              </div>
+              
+              <!-- Content -->
+              <div class="p-5">
+                <div class="flex items-start gap-2 mb-2">
+                  <h3 class="font-display text-xl font-bold text-ink group-hover:text-brick transition-colors flex-1">{attr.name}</h3>
+                </div>
+                <p class="text-xs text-stone/60 mb-2">{attr.category}</p>
+                <p class="text-sm text-stone line-clamp-2 mb-4">{attr.brief}</p>
+                
+                <!-- Tags -->
+                <div class="flex flex-wrap gap-2">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-salt rounded-lg text-xs text-ink">
+                    <svg class="w-3.5 h-3.5 text-brick" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    {attr.price}
+                  </span>
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-salt rounded-lg text-xs text-ink">
+                    <svg class="w-3.5 h-3.5 text-amber-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    {attr.duration}
+                  </span>
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-salt rounded-lg text-xs text-ink">
+                    <svg class="w-3.5 h-3.5 text-pool" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    {attr.bestSeason}
+                  </span>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+        
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-20">
+          <div class="text-5xl mb-4">🔍</div>
+          <p class="text-stone text-lg mb-1">这个类别和交通组合下暂无景点</p>
+          <p class="text-stone/50 text-sm mb-4">试试放宽筛选条件</p>
+          <button onclick="resetFilters()" class="px-6 py-2 bg-brick text-white rounded-xl text-sm font-medium hover:bg-brick-dark transition-colors">查看全部景点</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+      <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center p-4">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full max-h-[85vh] sm:max-h-[80vh] overflow-y-auto shadow-2xl">
+          <div id="modal-content" class="p-6 sm:p-8">
+            <!-- Content injected by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const attractions = {attractions};
+    let currentCategory = 'all';
+    let currentConv = 'all';
+
+    // Category filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update active state
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          b.classList.remove('bg-brick', 'text-white', 'shadow-lg', 'shadow-brick/20');
+          b.classList.add('bg-salt', 'text-ink');
+        });
+        btn.classList.remove('bg-salt', 'text-ink');
+        btn.classList.add('bg-brick', 'text-white', 'shadow-lg', 'shadow-brick/20');
+
+        currentCategory = btn.dataset.filter;
+        applyFilter();
+      });
+    });
+
+    // Convenience filter buttons
+    document.querySelectorAll('.conv-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.conv-btn').forEach(b => {
+          b.classList.remove('bg-amber/10', 'text-amber-dark');
+          b.classList.add('bg-salt', 'text-stone');
+        });
+        btn.classList.remove('bg-salt', 'text-stone');
+        btn.classList.add('bg-amber/10', 'text-amber-dark');
+
+        currentConv = btn.dataset.conv;
+        applyFilter();
+      });
+    });
+
+    function applyFilter() {
+      const cards = document.querySelectorAll('.attraction-card');
+      let visible = 0;
+
+      cards.forEach(card => {
+        const catMatch = currentCategory === 'all' || card.dataset.category === currentCategory;
+        const convMatch = currentConv === 'all' || card.dataset.conv === currentConv;
+
+        if (catMatch && convMatch) {
+          card.style.display = '';
+          visible++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      document.getElementById('result-count').textContent = visible;
+      document.getElementById('empty-state').style.display = visible === 0 ? 'block' : 'none';
+
+      // Update section label
+      const label = currentCategory === 'all' ? '全部景点' : currentCategory;
+      document.getElementById('section-label').innerHTML = `${label} · <span id="result-count">${visible}</span>个`;
+    }
+
+    function resetFilters() {
+      document.querySelector('[data-filter="all"]').click();
+      document.querySelector('[data-conv="all"]').click();
+    }
+
+    // Modal functionality
+    document.querySelectorAll('.attraction-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = card.dataset.index;
+        const attr = attractions[idx];
+        showModal(attr, idx);
+      });
+    });
+
+    function showModal(attr, idx) {
+      const modal = document.getElementById('detail-modal');
+      const content = document.getElementById('modal-content');
+      
+      content.innerHTML = `
+            <div class="flex justify-between items-start mb-6">
+              <div>
+                <div class="flex gap-2 mb-2">
+                  <span class="px-2.5 py-1 bg-salt rounded-full text-xs font-medium text-ink">${attr.county}</span>
+                  <span class="px-2.5 py-1 bg-brick/10 rounded-full text-xs font-medium text-brick">${attr.category}</span>
+                  <span class="px-2.5 py-1 bg-amber/10 rounded-full text-xs font-medium text-amber-dark">${attr.era}</span>
+                </div>
+                <h2 class="font-display text-3xl font-bold text-ink">${attr.name}</h2>
+              </div>
+              <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-salt flex items-center justify-center hover:bg-salt-dark transition-colors shrink-0">
+                <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+            
+            <!-- Hero Image -->
+            <div class="relative h-64 sm:h-72 rounded-2xl overflow-hidden mb-6">
+              <img 
+                src="/images/attractions/${idx}.png" 
+                alt="${attr.name}"
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+            </div>
+            
+            <!-- Why Visit -->
+            <div class="bg-brick/5 border-l-4 border-brick rounded-r-xl p-5 mb-6">
+              <h4 class="font-medium text-ink mb-2 flex items-center gap-2">
+                <svg class="w-5 h-5 text-brick" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                为什么值得一去
+              </h4>
+              <p class="text-stone">${attr.why}</p>
+            </div>
+            
+            <!-- Detail -->
+            <div class="mb-6">
+              <h4 class="font-medium text-ink mb-2">详细介绍</h4>
+              <p class="text-stone leading-relaxed">${attr.detail}</p>
+            </div>
+            
+            <!-- Info Grid -->
+            <div class="grid grid-cols-3 gap-4">
+              <div class="bg-salt rounded-xl p-4 text-center">
+                <svg class="w-6 h-6 text-brick mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <p class="text-xs text-stone mb-1">门票</p>
+                <p class="font-medium text-ink text-sm">${attr.price}</p>
+              </div>
+              <div class="bg-salt rounded-xl p-4 text-center">
+                <svg class="w-6 h-6 text-amber-dark mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <p class="text-xs text-stone mb-1">建议时长</p>
+                <p class="font-medium text-ink text-sm">${attr.duration}</p>
+              </div>
+              <div class="bg-salt rounded-xl p-4 text-center">
+                <svg class="w-6 h-6 text-pool mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <p class="text-xs text-stone mb-1">最佳季节</p>
+                <p class="font-medium text-ink text-sm">${attr.bestSeason}</p>
+              </div>
+            </div>
+          `;
+      
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      // Scroll modal content to top
+      modal.querySelector('.bg-white').scrollTop = 0;
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('detail-modal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</Layout>

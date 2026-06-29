@@ -1,0 +1,162 @@
+{
+  "events": [
+    {
+      "type": "pageview",
+      "data": {
+        "title": "测试"
+      },
+      "sessionId": "test123",
+      "page": "/test",
+      "time": 1719600000000,
+      "ip": "local",
+      "receivedAt": 1782745592849
+    },
+    {
+      "type": "pageview",
+      "data": {
+        "title": "如何去盐湖 - 盐色运城",
+        "referrer": "http://localhost:4321/saltlake/navigate"
+      },
+      "sessionId": "s_1782745701284_gj7nzd",
+      "page": "/saltlake/navigate",
+      "time": 1782745701284,
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "ip": "local",
+      "receivedAt": 1782745701287
+    },
+    {
+      "type": "pageview",
+      "data": {
+        "title": "如何去盐湖 - 盐色运城",
+        "referrer": "http://localhost:4321/saltlake/navigate"
+      },
+      "sessionId": "s_1782745702328_yuwnci",
+      "page": "/saltlake/navigate",
+      "time": 1782745702329,
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "ip": "local",
+      "receivedAt": 1782745702330
+    },
+    {
+      "type": "click",
+      "data": {
+        "tag": "A",
+        "text": "反馈建议",
+        "href": "/fankui",
+        "type": "link"
+      },
+      "sessionId": "s_1782745702328_yuwnci",
+      "page": "/saltlake/navigate",
+      "time": 1782745725985,
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "ip": "local",
+      "receivedAt": 1782745725991
+    },
+    {
+      "type": "pageview",
+      "data": {
+        "title": "反馈建议 - 盐色运城",
+        "referrer": "http://localhost:4321/saltlake/navigate"
+      },
+      "sessionId": "s_1782745726024_zc1zbk",
+      "page": "/fankui",
+      "time": 1782745726024,
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "ip": "local",
+      "receivedAt": 1782745726026
+    },
+    {
+      "type": "pageview",
+      "data": {
+        "title": "数据后台 - 盐色运城",
+        "referrer": ""
+      },
+      "sessionId": "s_1782745731603_wjyela",
+      "page": "/admin",
+      "time": 1782745731603,
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "ip": "local",
+      "receivedAt": 1782745731606
+    },
+    {
+      "type": "click",
+      "data": {
+        "tag": "BUTTON",
+        "text": "登 录",
+        "type": "button"
+      },
+      "sessionId": "s_1782745731603_wjyela",
+      "page": "/admin",
+      "time": 1782745738488,
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "ip": "local",
+      "receivedAt": 1782745738499
+    },
+    {
+      "type": "click",
+      "data": {
+        "tag": "BUTTON",
+        "text": "登 录",
+        "type": "button"
+      },
+      "sessionId": "s_1782745731603_wjyela",
+      "page": "/admin",
+      "time": 1782745743276,
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "ip": "local",
+      "receivedAt": 1782745743285
+    },
+    {
+      "type": "click",
+      "data": {
+        "tag": "A",
+        "text": "首页",
+        "href": "/",
+        "type": "link"
+      },
+      "sessionId": "s_1782745731603_wjyela",
+      "page": "/admin",
+      "time": 1782745759723,
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "ip": "local",
+      "receivedAt": 1782745759729
+    },
+    {
+      "type": "pageview",
+      "data": {
+        "title": "盐色运城 - 本地设计师带你逛运城",
+        "referrer": "http://localhost:4321/admin"
+      },
+      "sessionId": "s_1782745759796_0ayh9x",
+      "page": "/",
+      "time": 1782745759796,
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "ip": "local",
+      "receivedAt": 1782745759799
+    },
+    {
+      "type": "pageview",
+      "data": {
+        "title": "盐色运城 - 本地设计师带你逛运城",
+        "referrer": "http://localhost:4321/"
+      },
+      "sessionId": "s_1782745788637_0tvp7k",
+      "page": "/",
+      "time": 1782745788637,
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "ip": "local",
+      "receivedAt": 1782745788641
+    }
+  ],
+  "feedbacks": [
+    {
+      "nickname": "测试",
+      "type": "feature",
+      "rating": 5,
+      "content": "测试反馈",
+      "id": "mqzcp34ie6is",
+      "createdAt": "2026-06-29T15:06:32.850Z",
+      "ip": "local"
+    }
+  ]
+}

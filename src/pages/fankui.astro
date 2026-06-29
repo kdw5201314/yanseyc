@@ -1,0 +1,195 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="反馈建议 - 盐色运城" description="告诉我们你的想法，帮助我们把盐色运城做得更好。">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+    <!-- 头部 -->
+    <div class="text-center mb-12">
+      <span class="inline-block px-4 py-1 bg-amber/10 text-amber rounded-full text-sm font-medium mb-6">
+        💬 反馈建议
+      </span>
+      <h1 class="font-display text-4xl sm:text-5xl font-bold text-ink mb-4">
+        你的意见，我们很在乎
+      </h1>
+      <p class="text-stone text-lg max-w-xl mx-auto leading-relaxed">
+        无论是功能建议、Bug反馈、还是新的旅游攻略需求，都欢迎告诉我们。每一条反馈我们都会认真看。
+      </p>
+    </div>
+
+    <!-- 反馈表单 -->
+    <div id="feedback-form" class="bg-white rounded-2xl shadow-sm border border-salt-dark/10 p-6 sm:p-8">
+      <div class="space-y-6">
+        <!-- 昵称 -->
+        <div>
+          <label class="block text-sm font-medium text-ink mb-2">你的昵称 <span class="text-stone/40 font-normal">(选填)</span></label>
+          <input
+            type="text"
+            id="f-nickname"
+            placeholder="让大家怎么称呼你？"
+            maxlength="20"
+            class="w-full px-4 py-3 rounded-xl border border-salt-dark/20 bg-salt/30 text-ink placeholder:text-stone/40 focus:outline-none focus:border-brick focus:ring-2 focus:ring-brick/20 transition-all"
+          />
+        </div>
+
+        <!-- 反馈类型 -->
+        <div>
+          <label class="block text-sm font-medium text-ink mb-3">反馈类型</label>
+          <div class="flex flex-wrap gap-3" id="type-buttons">
+            <button data-type="feature" class="type-btn px-4 py-2 rounded-full border border-salt-dark/20 text-stone text-sm hover:border-amber hover:text-amber transition-colors">
+              ✨ 功能建议
+            </button>
+            <button data-type="bug" class="type-btn px-4 py-2 rounded-full border border-salt-dark/20 text-stone text-sm hover:border-amber hover:text-amber transition-colors">
+              🐛 Bug反馈
+            </button>
+            <button data-type="content" class="type-btn px-4 py-2 rounded-full border border-salt-dark/20 text-stone text-sm hover:border-amber hover:text-amber transition-colors">
+              📝 内容建议
+            </button>
+            <button data-type="other" class="type-btn px-4 py-2 rounded-full border border-salt-dark/20 text-stone text-sm hover:border-amber hover:text-amber transition-colors">
+              💡 其他
+            </button>
+          </div>
+        </div>
+
+        <!-- 评分 -->
+        <div>
+          <label class="block text-sm font-medium text-ink mb-3">整体满意度</label>
+          <div class="flex gap-2" id="star-rating">
+            <button data-star="1" class="star-btn text-3xl text-salt-dark/30 hover:text-amber transition-colors">⭐</button>
+            <button data-star="2" class="star-btn text-3xl text-salt-dark/30 hover:text-amber transition-colors">⭐</button>
+            <button data-star="3" class="star-btn text-3xl text-salt-dark/30 hover:text-amber transition-colors">⭐</button>
+            <button data-star="4" class="star-btn text-3xl text-salt-dark/30 hover:text-amber transition-colors">⭐</button>
+            <button data-star="5" class="star-btn text-3xl text-salt-dark/30 hover:text-amber transition-colors">⭐</button>
+          </div>
+        </div>
+
+        <!-- 反馈内容 -->
+        <div>
+          <label class="block text-sm font-medium text-ink mb-2">你的想法</label>
+          <textarea
+            id="f-content"
+            rows="5"
+            placeholder="说说你的建议、想法或遇到的问题..."
+            maxlength="500"
+            class="w-full px-4 py-3 rounded-xl border border-salt-dark/20 bg-salt/30 text-ink placeholder:text-stone/40 focus:outline-none focus:border-brick focus:ring-2 focus:ring-brick/20 transition-all resize-none"
+          ></textarea>
+          <p class="text-xs text-stone/50 mt-1 text-right"><span id="char-count">0</span>/500</p>
+        </div>
+
+        <!-- 提交 -->
+        <button
+          id="submit-btn"
+          class="w-full py-3.5 bg-brick text-white rounded-xl font-medium hover:bg-brick-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          提交反馈
+        </button>
+      </div>
+
+      <!-- 成功提示 -->
+      <div id="success-msg" class="hidden mt-6 p-6 bg-pool/10 border border-pool/30 rounded-xl text-center">
+        <div class="text-5xl mb-4">🎉</div>
+        <h3 class="font-display text-xl font-bold text-ink mb-2">感谢你的反馈！</h3>
+        <p class="text-stone">我们会认真阅读每一条建议，努力把盐色运城做得更好。</p>
+        <button onclick="location.reload()" class="mt-4 px-6 py-2 bg-pool/20 text-pool rounded-lg text-sm hover:bg-pool/30 transition-colors">
+          再写一条
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedType = '';
+    let selectedStar = 0;
+
+    // 类型选择
+    document.querySelectorAll('.type-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.type-btn').forEach(b => {
+          b.classList.remove('bg-amber/10', 'text-amber', 'border-amber');
+          b.classList.add('text-stone', 'border-salt-dark/20');
+        });
+        btn.classList.add('bg-amber/10', 'text-amber', 'border-amber');
+        btn.classList.remove('text-stone', 'border-salt-dark/20');
+        selectedType = btn.dataset.type;
+      });
+    });
+
+    // 星级评分
+    document.querySelectorAll('.star-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectedStar = parseInt(btn.dataset.star);
+        document.querySelectorAll('.star-btn').forEach((b, idx) => {
+          b.classList.toggle('text-salt-dark/30', idx >= selectedStar);
+          b.classList.toggle('text-amber', idx < selectedStar);
+        });
+      });
+      btn.addEventListener('mouseenter', () => {
+        const star = parseInt(btn.dataset.star);
+        document.querySelectorAll('.star-btn').forEach((b, idx) => {
+          b.classList.toggle('text-salt-dark/30', idx >= star);
+          b.classList.toggle('text-amber', idx < star);
+        });
+      });
+    });
+
+    document.getElementById('star-rating')?.addEventListener('mouseleave', () => {
+      document.querySelectorAll('.star-btn').forEach((b, idx) => {
+        b.classList.toggle('text-salt-dark/30', idx >= selectedStar);
+        b.classList.toggle('text-amber', idx < selectedStar);
+      });
+    });
+
+    // 字数统计
+    const textarea = document.getElementById('f-content');
+    const charCount = document.getElementById('char-count');
+    textarea?.addEventListener('input', () => {
+      charCount.textContent = textarea.value.length;
+    });
+
+    // 提交
+    document.getElementById('submit-btn')?.addEventListener('click', async () => {
+      const nickname = (document.getElementById('f-nickname') as HTMLInputElement).value.trim();
+      const content = textarea.value.trim();
+      
+      if (!content) {
+        alert('请填写反馈内容');
+        return;
+      }
+      if (!selectedType) {
+        alert('请选择反馈类型');
+        return;
+      }
+
+      const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+      btn.disabled = true;
+      btn.textContent = '提交中...';
+
+      try {
+        const res = await fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nickname: nickname || '匿名用户',
+            type: selectedType,
+            rating: selectedStar,
+            content,
+            page: window.location.pathname,
+          })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          document.getElementById('feedback-form').querySelector('.space-y-6').classList.add('hidden');
+          document.getElementById('success-msg').classList.remove('hidden');
+        } else {
+          alert('提交失败，请稍后再试');
+          btn.disabled = false;
+          btn.textContent = '提交反馈';
+        }
+      } catch {
+        alert('网络错误，请稍后再试');
+        btn.disabled = false;
+        btn.textContent = '提交反馈';
+      }
+    });
+  </script>
+</Layout>

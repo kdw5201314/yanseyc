@@ -13,6 +13,7 @@ const navItems = [
   { label: '交通指南', href: '/transport' },
   { label: '实时盐湖', href: '/saltlake' },
   { label: '实用信息', href: '/essentials' },
+  { label: '反馈建议', href: '/fankui' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -33,7 +34,8 @@ const currentPath = Astro.url.pathname;
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <a href="/" class="flex items-center gap-2">
-          <span class="font-display text-xl font-bold text-brick">盐色运城</span>
+          <img src="/images/logo-4-landscape.png" alt="盐色运城" class="h-9 w-auto" />
+          <span class="font-display text-xl font-bold text-brick hidden sm:inline">盐色运城</span>
         </a>
         <nav class="hidden md:flex items-center gap-1">
           {navItems.map((item) => (
@@ -90,6 +92,7 @@ const currentPath = Astro.url.pathname;
             <li><a href="/treasures" class="hover:text-amber transition-colors">国保地图</a></li>
             <li><a href="/food" class="hover:text-amber transition-colors">美食地图</a></li>
             <li><a href="/transport" class="hover:text-amber transition-colors">交通指南</a></li>
+            <li><a href="/fankui" class="hover:text-amber transition-colors">反馈建议</a></li>
           </ul>
         </div>
         <div>
@@ -112,6 +115,56 @@ const currentPath = Astro.url.pathname;
         menu.classList.toggle('hidden');
       });
     }
+  </script>
+
+  <!-- 全站分析追踪 -->
+  <script>
+    (function() {
+      const API = '/api/track';
+      const sessionId = 's_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+      const pagePath = window.location.pathname;
+
+      // 发送追踪事件
+      async function track(type, data) {
+        try {
+          await fetch(API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type, data, sessionId, page: pagePath, time: Date.now(), ua: navigator.userAgent.slice(0, 200) }),
+            keepalive: true
+          });
+        } catch(e) {}
+      }
+
+      // 页面浏览
+      track('pageview', { title: document.title, referrer: document.referrer || '' });
+
+      // 全局点击追踪
+      document.addEventListener('click', function(e) {
+        const el = e.target.closest('a, button, .attraction-card, .guobao-item, .filter-btn, .cta-btn');
+        if (!el) return;
+
+        let clickData = { tag: el.tagName, text: (el.textContent || '').trim().slice(0, 60) };
+
+        if (el.tagName === 'A') {
+          clickData.href = el.getAttribute('href') || '';
+          clickData.type = 'link';
+        } else if (el.classList.contains('attraction-card')) {
+          clickData.type = 'attraction-card';
+          clickData.text = (el.querySelector('h2')?.textContent || '').trim().slice(0, 40);
+        } else if (el.classList.contains('guobao-item')) {
+          clickData.type = 'guobao-item';
+          clickData.text = (el.querySelector('h3')?.textContent || '').trim().slice(0, 40);
+        } else if (el.classList.contains('filter-btn')) {
+          clickData.type = 'filter';
+          clickData.text = el.textContent.trim().slice(0, 20);
+        } else {
+          clickData.type = 'button';
+        }
+
+        track('click', clickData);
+      });
+    })();
   </script>
 </body>
 </html>

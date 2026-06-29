@@ -1,138 +1,300 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import guobaoData from '../data/guobao.json';
+
+const { items, meta, chargeable_list } = guobaoData;
+const batches = [...new Set(items.map(i => i.batch))].sort();
+const types = [...new Set(items.map(i => i.type))];
+const allCounties = [...new Set(items.map(i => {
+  const addr = i.address;
+  if (addr.includes('盐湖区')) return '盐湖区';
+  if (addr.includes('永济市')) return '永济市';
+  if (addr.includes('芮城县')) return '芮城县';
+  if (addr.includes('万荣县')) return '万荣县';
+  if (addr.includes('稷山县')) return '稷山县';
+  if (addr.includes('新绛县')) return '新绛县';
+  if (addr.includes('夏县')) return '夏县';
+  if (addr.includes('河津市')) return '河津市';
+  if (addr.includes('闻喜县')) return '闻喜县';
+  if (addr.includes('绛县')) return '绛县';
+  if (addr.includes('临猗县')) return '临猗县';
+  if (addr.includes('垣曲县')) return '垣曲县';
+  if (addr.includes('平陆县')) return '平陆县';
+  return '其他';
+}))].sort();
+
+// Pad number for image lookup
+function padNo(n: number) { return String(n).padStart(3, '0'); }
 ---
 
-<Layout title="国保地图 - 盐色运城" description="运城102处全国重点文物保护单位全览，全国地级市数量第一。">
+<Layout title="国保地图 - 盐色运城" description="运城102处全国重点文物保护单位全览，全国地级市数量第一。按批次、类型、地区筛选，每一条都配有实地照片。">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-    <div class="text-center mb-12">
-      <span class="inline-block px-4 py-1 bg-amber/10 text-amber-dark rounded-full text-sm font-medium mb-4">
+    <!-- 数字冲击区 -->
+    <div class="text-center mb-10">
+      <span class="inline-block px-4 py-1 bg-brick/10 text-brick rounded-full text-sm font-medium mb-4">
         全国地级市 · 排名第一
       </span>
       <h1 class="font-display text-4xl sm:text-5xl font-bold text-ink mb-4">国保地图</h1>
       <p class="text-stone max-w-2xl mx-auto text-lg">
-        运城拥有102处全国重点文物保护单位，数量在全国地级市中遥遥领先。每一座古建、每一处遗址，都是中华文明的活化石。
+        运城拥有102处全国重点文物保护单位，数量在全国地级市中遥遥领先
       </p>
     </div>
 
-    <!-- 数据概览 -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-      <div class="p-6 rounded-2xl bg-white border border-salt-dark/10 text-center">
-        <p class="font-display text-4xl font-bold text-brick">102</p>
+    <!-- 统计卡片 -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+      <div class="p-5 rounded-2xl bg-white border border-salt-dark/10 text-center hover:shadow-md transition-shadow">
+        <p class="font-display text-4xl font-bold text-brick">{meta.total}</p>
         <p class="text-sm text-stone mt-1">国保总数</p>
       </div>
-      <div class="p-6 rounded-2xl bg-white border border-salt-dark/10 text-center">
-        <p class="font-display text-4xl font-bold text-amber">28</p>
+      <div class="p-5 rounded-2xl bg-white border border-salt-dark/10 text-center hover:shadow-md transition-shadow">
+        <p class="font-display text-4xl font-bold text-amber">{meta.category_counts['古建筑']}</p>
         <p class="text-sm text-stone mt-1">古建筑</p>
       </div>
-      <div class="p-6 rounded-2xl bg-white border border-salt-dark/10 text-center">
-        <p class="font-display text-4xl font-bold text-pool">22</p>
+      <div class="p-5 rounded-2xl bg-white border border-salt-dark/10 text-center hover:shadow-md transition-shadow">
+        <p class="font-display text-4xl font-bold text-pool">{meta.category_counts['古遗址']}</p>
         <p class="text-sm text-stone mt-1">古遗址</p>
       </div>
-      <div class="p-6 rounded-2xl bg-white border border-salt-dark/10 text-center">
-        <p class="font-display text-4xl font-bold text-salt-pink">15</p>
-        <p class="text-sm text-stone mt-1">古墓葬</p>
+      <div class="p-5 rounded-2xl bg-white border border-salt-dark/10 text-center hover:shadow-md transition-shadow">
+        <p class="font-display text-4xl font-bold text-salt-pink">{meta.chargeable}</p>
+        <p class="text-sm text-stone mt-1">收费</p>
       </div>
     </div>
 
-    <!-- 重点国保列表 -->
-    <div class="space-y-6">
-      <h2 class="font-display text-2xl font-bold text-ink">重点推荐</h2>
+    <!-- 筛选栏 -->
+    <div class="mb-8 space-y-4">
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="text-sm text-stone font-medium shrink-0">批次：</span>
+        <button class="filter-btn px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 bg-brick text-white border border-brick" data-filter="batch" data-value="全部">全部</button>
+        {batches.map(b => (
+          <button class="filter-btn px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 text-stone border border-salt-dark/20 hover:border-amber/50 hover:text-amber-dark" data-filter="batch" data-value={b}>{b}</button>
+        ))}
+      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="p-5 rounded-xl bg-white border border-salt-dark/10 hover:border-amber/30 transition-colors">
-          <div class="flex items-start justify-between">
-            <div>
-              <h3 class="font-bold text-ink">解州关帝庙</h3>
-              <p class="text-sm text-stone mt-1">第三批国保 · 古建筑</p>
-            </div>
-            <span class="px-2 py-1 bg-brick/10 text-brick text-xs rounded">盐湖区</span>
-          </div>
-        </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="text-sm text-stone font-medium shrink-0">类型：</span>
+        <button class="filter-btn px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 bg-brick text-white border border-brick" data-filter="type" data-value="全部">全部</button>
+        {types.map(t => (
+          <button class="filter-btn px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 text-stone border border-salt-dark/20 hover:border-amber/50 hover:text-amber-dark" data-filter="type" data-value={t}>{t}</button>
+        ))}
+      </div>
 
-        <div class="p-5 rounded-xl bg-white border border-salt-dark/10 hover:border-amber/30 transition-colors">
-          <div class="flex items-start justify-between">
-            <div>
-              <h3 class="font-bold text-ink">永乐宫</h3>
-              <p class="text-sm text-stone mt-1">第一批国保 · 古建筑</p>
-            </div>
-            <span class="px-2 py-1 bg-brick/10 text-brick text-xs rounded">芮城县</span>
-          </div>
-        </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="text-sm text-stone font-medium shrink-0">收费：</span>
+        <button class="filter-btn px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 bg-brick text-white border border-brick" data-filter="charge" data-value="全部">全部</button>
+        <button class="filter-btn px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 text-stone border border-salt-dark/20 hover:border-amber/50 hover:text-amber-dark" data-filter="charge" data-value="收费">收费</button>
+        <button class="filter-btn px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 text-stone border border-salt-dark/20 hover:border-amber/50 hover:text-amber-dark" data-filter="charge" data-value="免费">免费</button>
+      </div>
 
-        <div class="p-5 rounded-xl bg-white border border-salt-dark/10 hover:border-amber/30 transition-colors">
-          <div class="flex items-start justify-between">
-            <div>
-              <h3 class="font-bold text-ink">广仁王庙</h3>
-              <p class="text-sm text-stone mt-1">第五批国保 · 古建筑</p>
-            </div>
-            <span class="px-2 py-1 bg-brick/10 text-brick text-xs rounded">芮城县</span>
-          </div>
-        </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="text-sm text-stone font-medium shrink-0">地区：</span>
+        <button class="filter-btn px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 bg-brick text-white border border-brick" data-filter="county" data-value="全部">全部</button>
+        {allCounties.map(c => (
+          <button class="filter-btn px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 text-stone border border-salt-dark/20 hover:border-amber/50 hover:text-amber-dark" data-filter="county" data-value={c}>{c}</button>
+        ))}
+      </div>
 
-        <div class="p-5 rounded-xl bg-white border border-salt-dark/10 hover:border-amber/30 transition-colors">
-          <div class="flex items-start justify-between">
-            <div>
-              <h3 class="font-bold text-ink">万荣东岳庙</h3>
-              <p class="text-sm text-stone mt-1">第三批国保 · 古建筑</p>
-            </div>
-            <span class="px-2 py-1 bg-brick/10 text-brick text-xs rounded">万荣县</span>
-          </div>
-        </div>
-
-        <div class="p-5 rounded-xl bg-white border border-salt-dark/10 hover:border-amber/30 transition-colors">
-          <div class="flex items-start justify-between">
-            <div>
-              <h3 class="font-bold text-ink">司马光墓</h3>
-              <p class="text-sm text-stone mt-1">第三批国保 · 古墓葬</p>
-            </div>
-            <span class="px-2 py-1 bg-brick/10 text-brick text-xs rounded">夏县</span>
-          </div>
-        </div>
-
-        <div class="p-5 rounded-xl bg-white border border-salt-dark/10 hover:border-amber/30 transition-colors">
-          <div class="flex items-start justify-between">
-            <div>
-              <h3 class="font-bold text-ink">西阴村遗址</h3>
-              <p class="text-sm text-stone mt-1">第四批国保 · 古遗址</p>
-            </div>
-            <span class="px-2 py-1 bg-brick/10 text-brick text-xs rounded">夏县</span>
-          </div>
-        </div>
-
-        <div class="p-5 rounded-xl bg-white border border-salt-dark/10 hover:border-amber/30 transition-colors">
-          <div class="flex items-start justify-between">
-            <div>
-              <h3 class="font-bold text-ink">普救寺</h3>
-              <p class="text-sm text-stone mt-1">第四批国保 · 古建筑</p>
-            </div>
-            <span class="px-2 py-1 bg-brick/10 text-brick text-xs rounded">永济市</span>
-          </div>
-        </div>
-
-        <div class="p-5 rounded-xl bg-white border border-salt-dark/10 hover:border-amber/30 transition-colors">
-          <div class="flex items-start justify-between">
-            <div>
-              <h3 class="font-bold text-ink">万荣后土庙</h3>
-              <p class="text-sm text-stone mt-1">第四批国保 · 古建筑</p>
-            </div>
-            <span class="px-2 py-1 bg-brick/10 text-brick text-xs rounded">万荣县</span>
-          </div>
-        </div>
+      <!-- 搜索框 + 结果显示 -->
+      <div class="flex items-center gap-3">
+        <input id="search-input" type="text" placeholder="搜索国保名称..." class="flex-1 max-w-xs px-4 py-2 rounded-lg border border-salt-dark/20 bg-white text-sm text-ink placeholder:text-stone/40 focus:outline-none focus:border-amber/50 transition-colors">
+        <span id="result-count" class="text-sm text-stone/60">共 <strong class="text-amber-dark">{items.length}</strong> 处</span>
       </div>
     </div>
 
-    <!-- 地图占位 -->
-    <div class="mt-12">
-      <h2 class="font-display text-2xl font-bold text-ink mb-6">分布地图</h2>
-      <div class="aspect-[16/9] rounded-2xl bg-gradient-to-br from-salt-dark/10 to-amber/10 border border-salt-dark/10 flex items-center justify-center">
-        <div class="text-center">
-          <svg class="w-16 h-16 mx-auto text-salt-dark/30 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0121 18.382V7.618a1 1 0 01-.553-.894L15 7m0 13V7"/>
-          </svg>
-          <p class="text-stone text-sm">交互式国保分布地图（开发中）</p>
-          <p class="text-stone/50 text-xs mt-1">将标注全部102处国保单位的位置与信息</p>
-        </div>
-      </div>
+    <!-- 国保列表 + 手风琴 -->
+    <div id="treasures-list" class="space-y-3">
+      {items.map((item) => {
+        const isChargeable = item.price && item.price !== '免费';
+        const noStr = String(item.no).padStart(3, '0');
+        // Extract county from address
+        let county = '其他';
+        for (const c of allCounties) {
+          if (item.address.includes(c)) { county = c; break; }
+        }
+        return (
+          <div
+            class="treasure-item rounded-xl bg-white border border-salt-dark/10 overflow-hidden transition-all duration-300 hover:border-amber/30"
+            data-batch={item.batch}
+            data-type={item.type}
+            data-charge={isChargeable ? '收费' : '免费'}
+            data-county={county}
+            data-name={item.name}
+          >
+            <!-- 折叠头部 -->
+            <button class="treasure-header w-full flex items-center gap-4 p-4 text-left group" onclick="this.parentElement.classList.toggle('expanded')">
+              <!-- 缩略图 -->
+              <div class="w-16 h-16 rounded-lg bg-salt-dark/10 overflow-hidden shrink-0 flex items-center justify-center">
+                <span class="text-xs text-stone/40">#{item.no}</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <h3 class="font-bold text-ink text-sm sm:text-base group-hover:text-brick transition-colors truncate">{item.no}. {item.name}</h3>
+                  {isChargeable ? (
+                    <span class="px-1.5 py-0.5 bg-amber/10 text-amber-dark text-xs rounded shrink-0">{item.price}</span>
+                  ) : (
+                    <span class="px-1.5 py-0.5 bg-pool/10 text-pool text-xs rounded shrink-0">免费</span>
+                  )}
+                </div>
+                <div class="flex flex-wrap items-center gap-2 text-xs text-stone/60">
+                  <span>{item.batch}</span>
+                  <span>·</span>
+                  <span>{item.type}</span>
+                  <span>·</span>
+                  <span class="truncate">{item.address}</span>
+                </div>
+              </div>
+              <svg class="w-5 h-5 text-stone/40 shrink-0 transition-transform duration-300 treasure-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <!-- 展开内容 -->
+            <div class="treasure-body hidden px-4 pb-5 pt-0 border-t border-salt-dark/5">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+                <div class="md:col-span-1">
+                  <div class="aspect-[4/3] rounded-lg bg-salt-dark/10 flex items-center justify-center overflow-hidden">
+                    <span class="text-stone/40 text-sm">#{item.no} 图片</span>
+                  </div>
+                </div>
+                <div class="md:col-span-2 space-y-3">
+                  <p class="text-stone leading-relaxed text-sm">{item.brief}</p>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div class="p-3 rounded-lg bg-salt-dark/5">
+                      <p class="text-xs text-stone/60">批次</p>
+                      <p class="font-medium text-ink text-sm">{item.batch}</p>
+                    </div>
+                    <div class="p-3 rounded-lg bg-salt-dark/5">
+                      <p class="text-xs text-stone/60">类型</p>
+                      <p class="font-medium text-ink text-sm">{item.type}</p>
+                    </div>
+                    <div class="p-3 rounded-lg bg-salt-dark/5 md:col-span-2">
+                      <p class="text-xs text-stone/60">地址</p>
+                      <p class="font-medium text-ink text-sm">{item.address}</p>
+                    </div>
+                  </div>
+                  {isChargeable && (
+                    <div class="inline-flex items-center gap-1 px-3 py-1 bg-amber/10 text-amber-dark text-sm rounded-lg">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      门票：{item.price}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- 无结果 -->
+    <div id="no-results" class="hidden text-center py-16">
+      <p class="text-stone text-lg">没有符合条件的国保</p>
+      <p class="text-stone/60 text-sm mt-2">试试调整筛选条件或搜索关键词</p>
+    </div>
+
+    <!-- 分页 -->
+    <div id="pagination" class="flex items-center justify-center gap-2 mt-8">
+      <button id="prev-btn" class="px-4 py-2 rounded-lg border border-salt-dark/20 text-stone text-sm hover:border-amber/50 hover:text-amber-dark transition-colors disabled:opacity-30 disabled:cursor-not-allowed" disabled>上一页</button>
+      <span id="page-info" class="text-sm text-stone/60 px-3">第 1 页</span>
+      <button id="next-btn" class="px-4 py-2 rounded-lg border border-salt-dark/20 text-stone text-sm hover:border-amber/50 hover:text-amber-dark transition-colors disabled:opacity-30 disabled:cursor-not-allowed">下一页</button>
     </div>
   </div>
 </Layout>
+
+<script>
+  const PAGE_SIZE = 20;
+  let currentPage = 1;
+  let activeFilters = { batch: '全部', type: '全部', charge: '全部', county: '全部' };
+  let searchQuery = '';
+
+  const countSpan = document.getElementById('result-count').querySelector('strong');
+  const noResults = document.getElementById('no-results');
+  const list = document.getElementById('treasures-list');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const pageInfo = document.getElementById('page-info');
+  const searchInput = document.getElementById('search-input');
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.dataset.filter;
+      const value = btn.dataset.value;
+      document.querySelectorAll(`.filter-btn[data-filter="${type}"]`).forEach(b => {
+        b.classList.remove('bg-brick', 'text-white', 'border-brick');
+        b.classList.add('text-stone', 'border-salt-dark/20');
+      });
+      btn.classList.remove('text-stone', 'border-salt-dark/20');
+      btn.classList.add('bg-brick', 'text-white', 'border-brick');
+      activeFilters[type] = value;
+      currentPage = 1;
+      renderList();
+    });
+  });
+
+  // Search
+  let searchTimeout;
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      searchQuery = searchInput.value.trim().toLowerCase();
+      currentPage = 1;
+      renderList();
+    }, 250);
+  });
+
+  // Pagination
+  prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderList(); } });
+  nextBtn.addEventListener('click', () => { currentPage++; renderList(); });
+
+  function getAllItems() {
+    return Array.from(document.querySelectorAll('.treasure-item'));
+  }
+
+  function itemMatches(item) {
+    if (activeFilters.batch !== '全部' && item.dataset.batch !== activeFilters.batch) return false;
+    if (activeFilters.type !== '全部' && item.dataset.type !== activeFilters.type) return false;
+    if (activeFilters.charge !== '全部' && item.dataset.charge !== activeFilters.charge) return false;
+    if (activeFilters.county !== '全部' && item.dataset.county !== activeFilters.county) return false;
+    if (searchQuery && !item.dataset.name.toLowerCase().includes(searchQuery)) return false;
+    return true;
+  }
+
+  function renderList() {
+    const all = getAllItems();
+    const filtered = all.filter(itemMatches);
+
+    all.forEach(i => i.style.display = 'none');
+    const totalPages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = filtered.slice(start, start + PAGE_SIZE);
+    pageItems.forEach(i => i.style.display = '');
+
+    countSpan.textContent = filtered.length;
+    noResults.classList.toggle('hidden', filtered.length > 0);
+    pageInfo.textContent = `第 ${currentPage} / ${totalPages} 页`;
+    prevBtn.disabled = currentPage <= 1;
+    nextBtn.disabled = currentPage >= totalPages;
+
+    // Collapse all non-current page items
+    all.forEach(i => { if (i.style.display === 'none') i.classList.remove('expanded'); });
+  }
+
+  // Accordion expand
+  document.querySelectorAll('.treasure-header').forEach(header => {
+    header.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const item = header.parentElement;
+      item.classList.toggle('expanded');
+    });
+  });
+
+  // Initial render
+  renderList();
+</script>
+
+<style>
+  .treasure-item .treasure-body { display: none; }
+  .treasure-item.expanded .treasure-body { display: block; }
+  .treasure-item.expanded .treasure-chevron { transform: rotate(180deg); }
+</style>
