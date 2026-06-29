@@ -1,98 +1,311 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const foods = [
+  {
+    name: '解州羊肉泡馍',
+    county: '盐湖区',
+    category: '主食',
+    tag: '必吃',
+    tagColor: 'brick',
+    price: '¥25-40',
+    description: '运城的招牌美食，汤汁浓郁，羊肉鲜嫩，馍块吸满汤汁后香气四溢。关帝庙附近的老店最为正宗。',
+    detail: '解州羊肉泡馍历史悠久，据说与关帝庙的祭祀传统有关。选用本地散养山羊，文火慢炖6小时以上，汤色乳白，肉质酥烂。吃法讲究：先将馍掰成黄豆大小的碎块，浇上滚烫的羊肉汤，配以糖蒜、辣酱，一口下去，鲜香满溢。',
+    tip: '关帝庙景区门口的老店最正宗，建议上午去，汤头最浓。'
+  },
+  {
+    name: '运城大盘鸡',
+    county: '盐湖区',
+    category: '主食',
+    tag: '人气',
+    tagColor: 'brick',
+    price: '¥40-60',
+    description: '融合了山西面食文化与西北风味的独特美食，鸡肉嫩滑，土豆软糯，拌上面条令人回味无穷。',
+    detail: '运城大盘鸡虽源自新疆，但经过本地化改良，加入了山西特有的宽面，口感更为丰富。鸡肉用啤酒炖煮去腥增香，土豆先炸后炖，外酥内糯。最后拌入手工扯面，酱汁裹满每一根面条，是运城人聚餐的首选。',
+    tip: '份量较大，2-3人点一份中份即可。'
+  },
+  {
+    name: '稷山麻花',
+    county: '稷山县',
+    category: '小吃',
+    tag: '非遗',
+    tagColor: 'amber',
+    price: '¥5-15',
+    description: '山西四大名吃之一，色泽金黄，酥脆可口。相传始于隋朝，距今已有千年历史。',
+    detail: '稷山麻花以"香、酥、脆"三绝闻名。选用优质面粉，加入秘制油酥，经反复揉搓、拧花、油炸而成。成品金黄透亮，入口即碎，余香悠长。2009年被列入山西省非物质文化遗产名录。是走亲访友、旅游伴手礼的首选。',
+    tip: '稷山县城的老字号麻花店可以现炸现卖，口感最佳。'
+  },
+  {
+    name: '闻喜煮饼',
+    county: '闻喜县',
+    category: '糕点',
+    tag: '老字号',
+    tagColor: 'amber',
+    price: '¥10-30',
+    description: '运城传统糕点，外裹芝麻，内有栗色馅料，甜而不腻。鲁迅先生曾在《孤独者》中提及此美味。',
+    detail: '闻喜煮饼始于清康熙年间，已有三百多年历史。看似简单，制作工艺却极为讲究：以面粉、蜂蜜、芝麻油为皮，以栗子粉、白糖、桂花为馅，经炸制、挂浆、沾芝麻三道工序。咬开外层芝麻，内馅呈琥珀色，口感软糯，甜香入心。',
+    tip: '闻喜县城的煮饼老店可现场购买，真空包装适合带走。'
+  },
+  {
+    name: '北相羊肉胡卜',
+    county: '盐湖区',
+    category: '主食',
+    tag: '早餐',
+    tagColor: 'pool',
+    price: '¥15-25',
+    description: '以死面饼丝为主料，配羊肉汤煮制而成。饼丝筋道，汤鲜味美，是当地人早餐的首选。',
+    detail: '"胡卜"并非外来语，而是运城方言中对"饼丝"的称呼。将死面烙饼切成细丝，浇上滚烫的羊肉汤，饼丝吸饱汤汁却不烂，筋道有嚼劲。再配上嫩滑的羊肉片和翠绿的香菜，一碗下肚，浑身暖和。这是运城人雷打不动的早餐选择。',
+    tip: '早上7-9点去吃最地道，过了10点很多店就卖完了。'
+  },
+  {
+    name: '芮城麻片',
+    county: '芮城县',
+    category: '糕点',
+    tag: '特产',
+    tagColor: 'amber',
+    price: '¥15-35',
+    description: '薄如蝉翼、甜脆可口的传统糖片，始创于清代，是运城走亲访友的经典伴手礼。',
+    detail: '芮城麻片以芝麻、白糖、饴糖为原料，工艺精湛，需将糖浆拉至极薄，撒上精选芝麻，冷却后切成薄片。成品透明如玻璃，入口清甜酥脆，芝麻香气四溢。既可当零食，也可佐茶，老少皆宜。',
+    tip: '芮城县城的糕点铺有售，包装精美，适合送人。'
+  },
+  {
+    name: '永济牛肉饺子',
+    county: '永济市',
+    category: '主食',
+    tag: '人气',
+    tagColor: 'brick',
+    price: '¥20-35',
+    description: '皮薄馅大，汁多味鲜。永济牛肉饺子以黄牛肉为馅，一口咬下满嘴肉香。',
+    detail: '永济牛肉饺子选用本地黄牛后腿肉，手工剁馅（不用绞肉机以保持纤维），配以葱姜末和秘制调料。面皮用温水和面，擀得极薄，几乎能透出馅料的颜色。煮好后皮筋馅嫩，一口一个，蘸上醋蒜，令人欲罢不能。',
+    tip: '永济市区的饺子馆很多，饭点去要排队。'
+  },
+  {
+    name: '万荣凉粉',
+    county: '万荣县',
+    category: '小吃',
+    tag: '消暑',
+    tagColor: 'pool',
+    price: '¥8-15',
+    description: '夏日消暑神器，爽滑筋道，酸辣开胃。万荣凉粉以绿豆淀粉为原料，口感细腻清凉。',
+    detail: '万荣凉粉选用优质绿豆淀粉，经调浆、蒸熟、冷却三道工序。切成细条后，浇上蒜泥、醋、油泼辣子，撒上黄瓜丝和炸花生。入口冰凉筋滑，酸辣鲜香在舌尖碰撞，是运城人夏天的续命美食。',
+    tip: '夏天吃最爽，路边摊的反而更地道。'
+  },
+  {
+    name: '平陆油糕',
+    county: '平陆县',
+    category: '小吃',
+    tag: '传统',
+    tagColor: 'amber',
+    price: '¥5-10',
+    description: '外酥内软、甜而不腻的油炸糕点，金黄酥脆的外皮裹着绵密的红枣馅料。',
+    detail: '平陆油糕以烫面为皮，红枣泥为馅，入油锅炸至金黄。刚出锅时外皮酥脆，内馅滚烫软糯，枣香浓郁。一口咬下，外酥里嫩的口感层次分明，甜而不腻，是运城人过年过节、走亲访友的必备点心。',
+    tip: '要趁热吃！凉了口感差很多。'
+  },
+];
+
+const categories = [
+  { key: 'all', label: '全部', count: foods.length },
+  { key: '主食', label: '主食', count: foods.filter(f => f.category === '主食').length },
+  { key: '小吃', label: '小吃', count: foods.filter(f => f.category === '小吃').length },
+  { key: '糕点', label: '糕点', count: foods.filter(f => f.category === '糕点').length },
+];
 ---
 
-<Layout title="美食地图 - 盐色运城" description="运城美食地图——羊肉泡、大盘鸡、稷山麻花、闻喜煮饼、解州羊肉泡馍等地道美味。">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-    <div class="text-center mb-12">
-      <h1 class="font-display text-4xl sm:text-5xl font-bold text-ink mb-4">美食地图</h1>
-      <p class="text-stone max-w-2xl mx-auto text-lg">黄河岸边的烟火气，运城的每一口都是历史的滋味</p>
+<Layout title="美食地图 - 盐色运城" description="运城美食地图——解州羊肉泡馍、运城大盘鸡、稷山麻花、闻喜煮饼、北相羊肉胡卜等地道美味，带你吃遍运城。">
+  <div class="min-h-screen bg-salt">
+    <!-- Hero -->
+    <section class="relative bg-ink text-white overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-brick/15 via-transparent to-amber/10"></div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 relative">
+        <div class="max-w-3xl">
+          <p class="text-amber font-medium mb-3 tracking-widest text-sm">YUNCHENG FOOD MAP</p>
+          <h1 class="font-display text-4xl sm:text-5xl font-bold mb-4">
+            美食<span class="text-amber">地图</span>
+          </h1>
+          <p class="text-white/70 text-lg">黄河岸边的烟火气，运城的每一口都是历史的滋味</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Bar -->
+    <div class="sticky top-[64px] z-40 bg-white/95 backdrop-blur border-b border-salt-dark/10 py-3">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center gap-2 flex-wrap">
+          {categories.map((cat, i) => (
+            <button
+              class={`food-filter px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                i === 0
+                  ? 'bg-brick text-white'
+                  : 'bg-salt text-ink hover:bg-salt-dark'
+              }`}
+              data-cat={cat.key}
+            >
+              {cat.label}<span class="text-xs opacity-60 ml-1">{cat.count}</span>
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <article class="rounded-2xl overflow-hidden bg-white border border-salt-dark/10 hover:shadow-lg transition-shadow">
-        <div class="aspect-[16/10] bg-gradient-to-br from-amber/30 to-salt-dark/20 flex items-center justify-center">
-          <span class="text-stone/50 text-sm">羊肉泡馍</span>
-        </div>
-        <div class="p-6">
-          <h2 class="font-display text-xl font-bold text-ink mb-2">解州羊肉泡馍</h2>
-          <p class="text-stone text-sm leading-relaxed mb-3">运城的招牌美食，汤汁浓郁，羊肉鲜嫩，馍块吸满汤汁后香气四溢。关帝庙附近的老店最为正宗。</p>
-          <div class="flex items-center gap-2">
-            <span class="px-2 py-1 bg-brick/10 text-brick text-xs rounded">必吃</span>
-            <span class="px-2 py-1 bg-amber/10 text-amber-dark text-xs rounded">盐湖区</span>
-          </div>
-        </div>
-      </article>
+    <!-- Food Grid -->
+    <section class="py-8 sm:py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="food-grid">
+          {foods.map((food, idx) => (
+            <article
+              class="food-card group bg-white rounded-2xl overflow-hidden border border-salt-dark/10 hover:shadow-xl hover:shadow-brick/5 transition-all duration-300 hover:-translate-y-1"
+              data-category={food.category}
+              data-index={idx}
+            >
+              <!-- Visual Header -->
+              <div class="relative h-40 flex items-center justify-center overflow-hidden">
+                <div class={`absolute inset-0 bg-gradient-to-br ${
+                  food.tagColor === 'brick' ? 'from-brick/20 to-amber/10' :
+                  food.tagColor === 'amber' ? 'from-amber/25 to-salt-dark/15' :
+                  'from-pool/20 to-amber/10'
+                }`}></div>
+                <div class="relative text-center">
+                  <span class="text-5xl mb-2 block">
+                    {food.category === '主食' ? '🍜' : food.category === '小吃' ? '🥢' : '🥮'}
+                  </span>
+                  <span class="text-sm text-stone/60">{food.name}</span>
+                </div>
+                <span class={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium ${
+                  food.tagColor === 'brick' ? 'bg-brick text-white' :
+                  food.tagColor === 'amber' ? 'bg-amber text-ink' :
+                  'bg-pool text-white'
+                }`}>{food.tag}</span>
+                <span class="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur rounded-full text-xs font-medium text-ink">{food.county}</span>
+              </div>
 
-      <article class="rounded-2xl overflow-hidden bg-white border border-salt-dark/10 hover:shadow-lg transition-shadow">
-        <div class="aspect-[16/10] bg-gradient-to-br from-brick/20 to-salt-pink/20 flex items-center justify-center">
-          <span class="text-stone/50 text-sm">大盘鸡</span>
+              <!-- Content -->
+              <div class="p-5">
+                <h3 class="font-display text-xl font-bold text-ink mb-2 group-hover:text-brick transition-colors">{food.name}</h3>
+                <p class="text-sm text-stone line-clamp-2 mb-3">{food.description}</p>
+                <div class="flex items-center justify-between">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-salt rounded-lg text-xs text-ink">
+                    <svg class="w-3.5 h-3.5 text-brick" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    {food.price}
+                  </span>
+                  <span class="text-xs text-stone/50">{food.category}</span>
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
-        <div class="p-6">
-          <h2 class="font-display text-xl font-bold text-ink mb-2">运城大盘鸡</h2>
-          <p class="text-stone text-sm leading-relaxed mb-3">融合了山西面食文化与西北风味的独特美食，鸡肉嫩滑，土豆软糯，拌上面条令人回味无穷。</p>
-          <div class="flex items-center gap-2">
-            <span class="px-2 py-1 bg-brick/10 text-brick text-xs rounded">人气</span>
-            <span class="px-2 py-1 bg-amber/10 text-amber-dark text-xs rounded">市区</span>
-          </div>
-        </div>
-      </article>
 
-      <article class="rounded-2xl overflow-hidden bg-white border border-salt-dark/10 hover:shadow-lg transition-shadow">
-        <div class="aspect-[16/10] bg-gradient-to-br from-pool/20 to-amber/20 flex items-center justify-center">
-          <span class="text-stone/50 text-sm">稷山麻花</span>
-        </div>
-        <div class="p-6">
-          <h2 class="font-display text-xl font-bold text-ink mb-2">稷山麻花</h2>
-          <p class="text-stone text-sm leading-relaxed mb-3">山西四大名吃之一，色泽金黄，酥脆可口。相传始于隋朝，距今已有千年历史。</p>
-          <div class="flex items-center gap-2">
-            <span class="px-2 py-1 bg-amber/10 text-amber-dark text-xs rounded">小吃</span>
-            <span class="px-2 py-1 bg-amber/10 text-amber-dark text-xs rounded">稷山县</span>
+        <!-- Detail Modal -->
+        <div id="food-modal" class="fixed inset-0 z-50 hidden">
+          <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeFoodModal()"></div>
+          <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center p-4">
+            <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-xl w-full max-h-[85vh] overflow-y-auto shadow-2xl">
+              <div id="food-modal-content" class="p-6 sm:p-8"></div>
+            </div>
           </div>
         </div>
-      </article>
+      </div>
+    </section>
 
-      <article class="rounded-2xl overflow-hidden bg-white border border-salt-dark/10 hover:shadow-lg transition-shadow">
-        <div class="aspect-[16/10] bg-gradient-to-br from-salt-pink/30 to-amber/20 flex items-center justify-center">
-          <span class="text-stone/50 text-sm">闻喜煮饼</span>
-        </div>
-        <div class="p-6">
-          <h2 class="font-display text-xl font-bold text-ink mb-2">闻喜煮饼</h2>
-          <p class="text-stone text-sm leading-relaxed mb-3">运城传统糕点，外裹芝麻，内有栗色馅料，甜而不腻。鲁迅先生曾在《孤独者》中提及此美味。</p>
-          <div class="flex items-center gap-2">
-            <span class="px-2 py-1 bg-amber/10 text-amber-dark text-xs rounded">糕点</span>
-            <span class="px-2 py-1 bg-amber/10 text-amber-dark text-xs rounded">闻喜县</span>
+    <!-- Tips Section -->
+    <section class="py-12 bg-white border-t border-salt-dark/10">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="font-display text-2xl font-bold text-ink mb-4">觅食小贴士</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
+          <div class="text-center">
+            <div class="text-3xl mb-3">🌅</div>
+            <h3 class="font-medium text-ink mb-1">早吃胡卜</h3>
+            <p class="text-sm text-stone">羊肉胡卜要早上去，10点后可能就卖完了</p>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl mb-3">🎁</div>
+            <h3 class="font-medium text-ink mb-1">伴手好礼</h3>
+            <p class="text-sm text-stone">稷山麻花、闻喜煮饼、芮城麻片都是送礼佳品</p>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl mb-3">📍</div>
+            <h3 class="font-medium text-ink mb-1">县城更正宗</h3>
+            <p class="text-sm text-stone">很多美食在原产地县城吃比市区更地道</p>
           </div>
         </div>
-      </article>
-
-      <article class="rounded-2xl overflow-hidden bg-white border border-salt-dark/10 hover:shadow-lg transition-shadow">
-        <div class="aspect-[16/10] bg-gradient-to-br from-salt-dark/20 to-pool/20 flex items-center justify-center">
-          <span class="text-stone/50 text-sm">北相羊肉胡卜</span>
-        </div>
-        <div class="p-6">
-          <h2 class="font-display text-xl font-bold text-ink mb-2">北相羊肉胡卜</h2>
-          <p class="text-stone text-sm leading-relaxed mb-3">以死面饼丝为主料，配羊肉汤煮制而成。饼丝筋道，汤鲜味美，是当地人早餐的首选。</p>
-          <div class="flex items-center gap-2">
-            <span class="px-2 py-1 bg-amber/10 text-amber-dark text-xs rounded">早餐</span>
-            <span class="px-2 py-1 bg-amber/10 text-amber-dark text-xs rounded">北相镇</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="rounded-2xl overflow-hidden bg-white border border-salt-dark/10 hover:shadow-lg transition-shadow">
-        <div class="aspect-[16/10] bg-gradient-to-br from-amber/20 to-brick/10 flex items-center justify-center">
-          <span class="text-stone/50 text-sm">盐湖特色小吃</span>
-        </div>
-        <div class="p-6">
-          <h2 class="font-display text-xl font-bold text-ink mb-2">盐湖黑泥养生宴</h2>
-          <p class="text-stone text-sm leading-relaxed mb-3">以运城盐湖黑泥入菜，独具特色。黑泥富含矿物质，是当地特色的养生美食体验。</p>
-          <div class="flex items-center gap-2">
-            <span class="px-2 py-1 bg-pool/10 text-pool text-xs rounded">特色</span>
-            <span class="px-2 py-1 bg-amber/10 text-amber-dark text-xs rounded">盐湖区</span>
-          </div>
-        </div>
-      </article>
-    </div>
+      </div>
+    </section>
   </div>
+
+  <script is:inline define:vars={{ foods }}>
+    // Category filter
+    document.querySelectorAll('.food-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.food-filter').forEach(b => {
+          b.classList.remove('bg-brick', 'text-white');
+          b.classList.add('bg-salt', 'text-ink');
+        });
+        btn.classList.remove('bg-salt', 'text-ink');
+        btn.classList.add('bg-brick', 'text-white');
+
+        const cat = btn.dataset.cat;
+        document.querySelectorAll('.food-card').forEach(card => {
+          card.style.display = (cat === 'all' || card.dataset.category === cat) ? '' : 'none';
+        });
+      });
+    });
+
+    // Modal
+    document.querySelectorAll('.food-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.dataset.index);
+        const food = foods[idx];
+        showFoodModal(food);
+      });
+    });
+
+    function showFoodModal(food) {
+      const modal = document.getElementById('food-modal');
+      const content = document.getElementById('food-modal-content');
+      content.innerHTML = `
+        <div class="flex justify-between items-start mb-6">
+          <div>
+            <div class="flex gap-2 mb-3">
+              <span class="px-2.5 py-1 bg-salt rounded-full text-xs font-medium text-ink">${food.county}</span>
+              <span class="px-2.5 py-1 bg-brick/10 rounded-full text-xs font-medium text-brick">${food.category}</span>
+            </div>
+            <h2 class="font-display text-3xl font-bold text-ink">${food.name}</h2>
+          </div>
+          <button onclick="closeFoodModal()" class="w-10 h-10 rounded-full bg-salt flex items-center justify-center hover:bg-salt-dark transition-colors shrink-0">
+            <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="bg-salt rounded-xl p-4 mb-6 flex items-center justify-between">
+          <div>
+            <p class="text-xs text-stone/60 mb-1">参考价格</p>
+            <p class="font-display text-xl font-bold text-brick">${food.price}</p>
+          </div>
+          <div class="text-4xl">${food.category === '主食' ? '🍜' : food.category === '小吃' ? '🥢' : '🥮'}</div>
+        </div>
+
+        <div class="mb-6">
+          <h4 class="font-medium text-ink mb-2">详细介绍</h4>
+          <p class="text-stone leading-relaxed">${food.detail}</p>
+        </div>
+
+        <div class="bg-amber/5 border-l-4 border-amber rounded-r-xl p-4">
+          <h4 class="font-medium text-ink mb-1 flex items-center gap-2">
+            <span>💡</span> 小贴士
+          </h4>
+          <p class="text-sm text-stone">${food.tip}</p>
+        </div>
+      `;
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeFoodModal() {
+      document.getElementById('food-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeFoodModal();
+    });
+  </script>
 </Layout>

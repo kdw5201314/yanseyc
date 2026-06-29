@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# 禁止爬取后台和API
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://www.yanseyc.cn/sitemap.xml

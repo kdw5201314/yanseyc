@@ -2,8 +2,9 @@
 export interface Props {
   title?: string;
   description?: string;
+  image?: string;
 }
-const { title = '盐色运城', description = '本地设计师带你逛运城——运城文旅入口' } = Astro.props;
+const { title = '盐色运城', description = '本地设计师带你逛运城——运城文旅入口', image = '/images/og-default.jpg' } = Astro.props;
 
 const navItems = [
   { label: '首页', href: '/' },
@@ -17,6 +18,38 @@ const navItems = [
 ];
 
 const currentPath = Astro.url.pathname;
+const siteURL = 'https://www.yanseyc.cn';
+const canonicalURL = new URL(currentPath, siteURL).href;
+const ogImage = new URL(image, siteURL).href;
+const fullPath = currentPath === '/' ? '' : currentPath;
+
+// JSON-LD 结构化数据
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "盐色运城",
+  "url": siteURL,
+  "description": "运城文旅入口——七彩盐湖、102处国保、地道美食、交通攻略，一站式发现运城之美。",
+  "inLanguage": "zh-CN"
+};
+
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "TouristInformationCenter",
+  "name": "盐色运城",
+  "url": siteURL,
+  "description": "运城文化旅游信息网站，提供景点介绍、盐湖旅游攻略、美食推荐、交通指南等内容。",
+  "areaServed": "运城市",
+  "knowsLanguage": ["zh-CN"]
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "首页", "item": siteURL }
+  ]
+};
 ---
 
 <!DOCTYPE html>
@@ -27,7 +60,27 @@ const currentPath = Astro.url.pathname;
   <meta name="viewport" content="width=device-width" />
   <meta name="generator" content={Astro.generator} />
   <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalURL} />
   <title>{title}</title>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="盐色运城" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:locale" content="zh_CN" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <!-- JSON-LD 结构化数据 -->
+  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
 </head>
 <body class="min-h-screen flex flex-col">
   <header class="sticky top-0 z-50 bg-salt/95 backdrop-blur border-b border-salt-dark/20">
@@ -102,7 +155,10 @@ const currentPath = Astro.url.pathname;
         </div>
       </div>
       <div class="mt-8 pt-6 border-t border-white/10 text-center text-xs">
-        <p>盐色运城 yanseyc.com 2026 版权所有</p>
+        <p>© 2026 盐色运城 www.yanseyc.cn 版权所有</p>
+        <p class="mt-1">
+          <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener" class="hover:text-amber transition-colors">晋ICP备2026xxxxxx号</a>
+        </p>
       </div>
     </div>
   </footer>
