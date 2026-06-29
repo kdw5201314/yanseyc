@@ -1,9 +1,5 @@
 import type { APIRoute } from 'astro';
-import fs from 'node:fs';
-import path from 'node:path';
-
-const DATA_DIR = path.join(process.cwd(), 'data');
-const ANALYTICS_FILE = path.join(DATA_DIR, 'analytics.json');
+import { readData } from '../../lib/store';
 
 function verifyToken(token: string | null): boolean {
   if (!token) return false;
@@ -25,13 +21,6 @@ export const GET: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ error: '未登录' }), { status: 401 });
   }
 
-  try {
-    if (!fs.existsSync(ANALYTICS_FILE)) {
-      return new Response(JSON.stringify({ events: [], feedbacks: [] }), { status: 200 });
-    }
-    const data = JSON.parse(fs.readFileSync(ANALYTICS_FILE, 'utf-8'));
-    return new Response(JSON.stringify(data), { status: 200 });
-  } catch {
-    return new Response(JSON.stringify({ events: [], feedbacks: [] }), { status: 200 });
-  }
+  const data = readData();
+  return new Response(JSON.stringify(data), { status: 200 });
 };
